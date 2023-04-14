@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controls\ExceedableProgressBar - Copy.cs" />
+    <Compile Remove="Controls\TextBoxButton.cs" />
+    <Compile Remove="Converters\StringStartsWithConverter.cs" />
+    <Compile Remove="Environment\AskerInput.cs" />
+    <Compile Remove="Environment\AskerOutput.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controls\FolderBrowser\" />
+  </ItemGroup>
+
+</Project>

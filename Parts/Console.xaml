@@ -1,0 +1,59 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="BackgroundColourKey" Color="{StaticResource ThemeBackgroundColour}" />
+    <SolidColorBrush x:Key="ForegroundColourKey" Color="White" />
+    <SolidColorBrush x:Key="ForegroundMinorColourKey" Color="#80FFFFFF" />
+    <SolidColorBrush x:Key="BasegroundColourKey" Color="{StaticResource ThemeBasegroundColour}"/>
+
+    <SolidColorBrush x:Key="PanelColourKey" Color="#66646464" />
+    <SolidColorBrush x:Key="PanelFaintColourKey" Color="#33646464" />
+
+    <SolidColorBrush x:Key="NewColourKey" Color="Lime" />
+    <SolidColorBrush x:Key="OldColourKey" Color="#C3C000" />
+
+    <SolidColorBrush x:Key="MetaForegroundColourKey" Color="#00FFFF" />
+    <SolidColorBrush x:Key="MetaPanelColourKey" Color="#66008080" />
+
+    <SolidColorBrush x:Key="ErrorColourKey" Color="Red" />
+    <SolidColorBrush x:Key="WarningColourKey" Color="Yellow" />
+    <SolidColorBrush x:Key="FaultColourKey" Color="#FF8000" />
+    <SolidColorBrush x:Key="FormatColourKey" Color="#FF00FF" />
+
+    <SolidColorBrush x:Key="FileColourKey" Color="#FFF0A0" />
+
+    <Style TargetType="Block" x:Key="NormalBlockStyle">
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="TextAlignment" Value="Left"/>
+    </Style>
+    <Style TargetType="Paragraph" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+    </Style>
+    
+    <Style TargetType="Section" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Background" Value="{StaticResource PanelColourKey}"/>
+    </Style>
+    <Style TargetType="Section" x:Key="MetaSectionStyle" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="Background" Value="{StaticResource MetaPanelColourKey}"/>
+    </Style>
+
+
+    <Style TargetType="Block" x:Key="H1BlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="TextElement.FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style TargetType="Block" x:Key="NewBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="Foreground" Value="{StaticResource NewColourKey}"/>
+    </Style>
+    <Style TargetType="Block" x:Key="TimeBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="Foreground" Value="LightBlue"/>
+    </Style>
+    <Style TargetType="Block" x:Key="FormatBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="Foreground" Value="{StaticResource FormatColourKey}"/>
+    </Style>
+    <Style TargetType="Block" x:Key="ErrorBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="Background" Value="{StaticResource ErrorColourKey}"/>
+    </Style>
+</ResourceDictionary>
