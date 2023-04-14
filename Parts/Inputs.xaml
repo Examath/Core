@@ -186,7 +186,6 @@
     <!--#region CheckBox -->
 
     <Duration x:Key="CheckBoxAnimationDurationKey">0:0:0.125</Duration>
-
     <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource ContrastUnsizedControlStyle}">
         <Setter Property="BorderThickness" Value="2"/>
         <Setter Property="OverridesDefaultStyle" Value="True"/>
