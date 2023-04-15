@@ -99,6 +99,11 @@ namespace Examath.Core.Environment
             Output.Dispatcher.InvokeAsync(() => block.BringIntoView(), System.Windows.Threading.DispatcherPriority.Background);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Log"/> and adds it to this console as a <see cref="Section"/>
+        /// </summary>
+        /// <param name="title">Optional heading for this <see cref="Log"/></param>
+        /// <returns>The new <see cref="Log"/></returns>
         public Log StartLog(string title = "")
         {
             Log log = new(Output, title);

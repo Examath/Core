@@ -16,10 +16,18 @@ namespace Examath.Core.Environment
     {
         #region Init
 
+        /// <summary>
+        /// Initialises a new <see cref="Log"/>
+        /// </summary>
+        /// <remarks>
+        /// Use the wrapper <see cref="Env.StartLog(string)"/> instead
+        /// </remarks>
+        /// <param name="parent">The <see cref="FlowDocument"/> that this Log will be inserted into</param>
+        /// <param name="title">Optional heading for this <see cref="Log"/></param>
         public Log(FlowDocument parent, string title = "")
         {
             _Parent = parent;
-            if (title != string.Empty)
+            if (!string.IsNullOrWhiteSpace(title))
             {
                 Out(title, ConsoleStyle.H1BlockStyle);
             }
