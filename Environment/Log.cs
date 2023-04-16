@@ -107,6 +107,17 @@ namespace Examath.Core.Environment
         }
 
         /// <summary>
+        /// Edits the label for the most recent timing if <paramref name="label"/> is provided, 
+        /// and updates the elapsed timestamp
+        /// </summary>
+        /// <param name="label">The new text the label for the current timing output to have</param>
+        public void UpdateTiming(string label = "")
+        {
+            if (!string.IsNullOrWhiteSpace(label)) _Label = label;
+            _SubOutput.Text = $"{_Label}\t{_Stopwatch.ElapsedMilliseconds,6} ms ...";
+        }
+
+        /// <summary>
         /// Stops the stopwatch if it's still running and updates the label for this interval.
         /// </summary>
         /// <param name="postScript">A message appended to the end of the timing label</param>
