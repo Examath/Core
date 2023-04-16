@@ -1,14 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Examath.Core.Environment;
+﻿using CommunityToolkit.Mvvm.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 
 namespace Examath.Core.Environment
@@ -17,18 +9,58 @@ namespace Examath.Core.Environment
     /// Represents an environment in which code and users can interact.
     /// </summary>
     /// <remarks>
-    /// This includes a console <see cref="Output"/>, a rich text document, and simple methods to display dynamic content on it.
+    /// This includes:
+    /// <list type="bullet">
+    ///     <item>A console <see cref="Output"/>, a rich text document</item>
+    ///     <item>A command to <see cref="Clear"/> the console</item>
+    ///     <item><see cref="object"/> <see cref="Model"/> for data</item>
+    ///     <item>
+    ///         Input methods <see cref="Ask(AskerOptions?, IAskerBlock[])"/> and
+    ///         <see cref="In(string)"/>
+    ///     </item>
+    ///     <item>
+    ///         Output methods <see cref="OutBlock(Block, ConsoleStyle, string)"/>,
+    ///         <see cref="Out(object, ConsoleStyle)"/>,
+    ///         <see cref="OutputBase.OutException(Exception, string)"/> and
+    ///         <see cref="StartLog(string)"/>
+    ///     </item>
+    /// </list>
+    /// Example usage:
+    /// <code>
+    /// XAML FlowDocumentScrollViewer                
+    ///     x:Name="OutputContainer"                
+    ///     Foreground="{StaticResource ForegroundColourKey}"                
+    ///     Grid.Row="4"                
+    ///     Margin="2"                
+    ///     VerticalScrollBarVisibility="Auto" Grid.Column="2"                
+    ///     DataContext="{Binding Env}"                
+    ///     Document="{Binding Output}"
+    /// C#:
+    ///     private Env _Env = new();
+    ///     ...        
+    ///         Env.Default = Env;
+    ///         Env.Model = _XModel;
+    /// </code>
     /// </remarks>
     public partial class Env : OutputBase
     {
 
         #region Init
 
+        /// <summary>
+        /// Creates a new <see cref="Env"/> set to the default console style resource.
+        /// </summary>
         public Env()
         {
             Output.Resources.Source = new Uri("/Examath.Core;component/Parts/Console.xaml", UriKind.Relative);
         }
 
+        /// <summary>
+        /// Static variable that may be used to access an <see cref="Env"/> indirectly.
+        /// </summary>
+        /// <remarks>
+        /// This must be set to a new instance at application start before using.
+        /// </remarks>
         public static Env? Default { get; set; }
 
         #endregion
@@ -57,13 +89,50 @@ namespace Examath.Core.Environment
 
         #endregion
 
+        #region Input
+
+        /// <summary>
+        /// Generic object for storing any kind of data
+        /// </summary>
+        public object? Model { get; set; }
+
+#pragma warning disable CA1822 // Mark members as static
+        /// <summary>
+        /// Creates and shows a new <see cref="Asker"/> dialog
+        /// </summary>
+        /// <param name="askerOptions">The <see cref="AskerOptions"/> for the dialog. Use null for default.</param>
+        /// <param name="askerBlocks"><see cref="IAskerBlock"/>s to display in this dialog</param>
+        /// <returns>The result of the dialog. True if true and false if (false or null).</returns>
+        public bool Ask(AskerOptions? askerOptions, params IAskerBlock[] askerBlocks)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            Asker asker = new(askerOptions, askerBlocks);
+            bool result = asker.ShowDialog() ?? false;
+            return result;
+        }
+
+        /// <summary>
+        /// Creates and shows a new <see cref="Asker"/> dialog
+        /// with a single <see cref="StringQ"/> (<see cref="string"/>, <see cref="TextBoxInput"/>) question
+        /// </summary>
+        /// <param name="question">Title of dialog</param>
+        /// <returns>A string that may contain input from the user. This may be blank.</returns>
+        public string In(string question = "Enter input")
+        {
+            StringQ stringQ = new();
+            Ask(new(title: question), new[] { stringQ });
+            return stringQ.Value;
+        }
+
+        #endregion
+
         #region Output
 
         /// <summary>
         /// Outputs a <see cref="Block"/> to this enviorment console. For custom-formatted messages
         /// </summary>
         /// <remarks>
-        /// Use <see cref="OutputBase.Out(string, ConsoleStyle)"/> if formatting is not needed.
+        /// Use <see cref="Out(object, ConsoleStyle)"/> if formatting is not needed.
         /// If the block already exists inside <see cref="Output"/>, then it's moved to last.
         /// </remarks>
         /// <param name="block">The section to output</param>
@@ -99,6 +168,12 @@ namespace Examath.Core.Environment
             Output.Dispatcher.InvokeAsync(() => block.BringIntoView(), System.Windows.Threading.DispatcherPriority.Background);
         }
 
+        public override void Out(object message, ConsoleStyle type = ConsoleStyle.Unset)
+        {
+            Section section = new(new Paragraph(new Run(message.ToString())));
+            OutBlock(section, type);
+        }
+
         /// <summary>
         /// Creates a new <see cref="Log"/> and adds it to this console as a <see cref="Section"/>
         /// </summary>
@@ -109,35 +184,6 @@ namespace Examath.Core.Environment
             Log log = new(Output, title);
             OutBlock(log.Output);
             return log;
-        }
-
-        public override void Out(object message, ConsoleStyle type = ConsoleStyle.Unset)
-        {
-            Section section = new(new Paragraph(new Run(message.ToString())));
-            OutBlock(section, type);
-        }
-
-        #endregion
-
-        #region Input
-
-        /// <summary>
-        /// Generic object for storing any kind of data
-        /// </summary>
-        public object? Model { get; set; }
-
-        public string In(string question = "Enter input")
-        {
-            StringQ stringQ = new();
-            Ask(new(title: question), new[] {stringQ});
-            return stringQ.Value;
-        }
-
-        public bool Ask(AskerOptions? askerOptions, params IAskerBlock[] askerBlocks)
-        {
-            Asker asker = new(askerOptions, askerBlocks);
-            bool result = asker.ShowDialog() ?? false;
-            return result;
         }
 
         #endregion

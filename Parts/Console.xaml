@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- Use with Examath.Environment.Env -->
+
     <SolidColorBrush x:Key="BackgroundColourKey" Color="{StaticResource ThemeBackgroundColour}" />
     <SolidColorBrush x:Key="ForegroundColourKey" Color="White" />
     <SolidColorBrush x:Key="ForegroundMinorColourKey" Color="#80FFFFFF" />
@@ -22,6 +24,17 @@
 
     <SolidColorBrush x:Key="FileColourKey" Color="#FFF0A0" />
 
+    <Style TargetType="FlowDocument">
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="PagePadding" Value="0"/>
+    </Style>
+    
+    <Style TargetType="TableCell">
+        <Setter Property="Background" Value="{StaticResource PanelColourKey}"/>
+        <Setter Property="Padding" Value="2" />
+    </Style>
+
     <Style TargetType="Block" x:Key="NormalBlockStyle">
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Padding" Value="2" />
@@ -30,7 +43,7 @@
     <Style TargetType="Paragraph" BasedOn="{StaticResource NormalBlockStyle}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
     </Style>
-    
+
     <Style TargetType="Section" BasedOn="{StaticResource NormalBlockStyle}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Background" Value="{StaticResource PanelColourKey}"/>
@@ -38,7 +51,6 @@
     <Style TargetType="Section" x:Key="MetaSectionStyle" BasedOn="{StaticResource NormalBlockStyle}">
         <Setter Property="Background" Value="{StaticResource MetaPanelColourKey}"/>
     </Style>
-
 
     <Style TargetType="Block" x:Key="H1BlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
         <Setter Property="TextElement.FontWeight" Value="Bold"/>
