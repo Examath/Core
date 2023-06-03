@@ -96,9 +96,8 @@ namespace Examath.Core.Environment
         /// </summary>
         public object? Model { get; set; }
 
-#pragma warning disable CA1822 // Mark members as static
         /// <summary>
-        /// Creates and shows a new <see cref="Asker"/> dialog
+        /// Use <see cref="Asker.Show(AskerOptions?, IAskerBlock[])"/> instead.
         /// </summary>
         /// <param name="askerOptions">The <see cref="AskerOptions"/> for the dialog. Use null for default.</param>
         /// <param name="askerBlocks"><see cref="IAskerBlock"/>s to display in this dialog</param>
@@ -120,7 +119,7 @@ namespace Examath.Core.Environment
         public string In(string question = "Enter input")
         {
             StringQ stringQ = new();
-            Ask(new(title: question), new[] { stringQ });
+            Asker.Show(new(title: question), new[] { stringQ });
             return stringQ.Value;
         }
 

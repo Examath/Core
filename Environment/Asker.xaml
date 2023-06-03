@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Examath.Core.Environment"
         mc:Ignorable="d"
-        Title="Input needed" SizeToContent="Height" MinWidth="200" MaxWidth="600" Width="400"
+        Title="Input needed" SizeToContent="Height" MinWidth="200" MaxWidth="600" Width="400" WindowStyle="ToolWindow"
         Style="{StaticResource ContrastWindowStyle}">
     <Window.Resources>
         <Style TargetType="ListBox" BasedOn="{StaticResource ControlPanelListBoxStyle}">
@@ -22,10 +22,10 @@
 
         </ListBox>
         <UniformGrid Rows="1" Grid.Row="1">
-            <Button x:Name="CancelButton" Click="CancelButton_Click" IsCancel="True" Visibility="Collapsed"
-                    Foreground="{StaticResource OldColourKey}">Cancel</Button>
-            <Button x:Name="OkButton" Click="OkButton_Click" IsDefault="True" 
+            <Button x:Name="OkButton" Click="OkButton_Click" IsDefault="True"
                     Foreground="{StaticResource NewColourKey}">Ok</Button>
+            <Button x:Name="CancelButton" Click="CancelButton_Click" IsCancel="True" Visibility="Collapsed"
+                    >Cancel</Button>
         </UniformGrid>
     </Grid>
 </Window>

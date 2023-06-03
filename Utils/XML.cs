@@ -9,22 +9,39 @@ using System.Xml;
 
 namespace Examath.Core.Utils
 {
+    /// <summary>
+    /// Utilities for loading XML files
+    /// </summary>
     public static class XML
     {
-        public static async Task<T?> TryLoad<T> (string fileLocation)
+        /// <summary>
+        /// Calls <see cref="LoadAsync{T}(string)"/> within a try-catch block,
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize to</typeparam>
+        /// <param name="fileLocation">Location of xml file</param>
+        /// <returns>The object, or default if an error occurred</returns>
+        public static async Task<T?> TryLoadAsync<T> (string fileLocation)
         {
-            T? Data = default;
-
             try
             {
-                Data = await Task.Run(() => Load(fileLocation));
+                return await LoadAsync<T>(fileLocation);
             }
             catch (Exception)
             {
-
+                return default(T);
             }
+        }
 
-            return Data;
+        /// <summary>
+        /// Deserialize an XML file to <typeparamref name="T"/> object asynchronously
+        /// using a one-time <see cref="XmlSerializer"/>
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize to</typeparam>
+        /// <param name="fileLocation">Location of xml file</param>
+        /// <returns>The object</returns>
+        public static async Task<T?> LoadAsync<T>(string fileLocation)
+        {
+            return await Task.Run(() => Load(fileLocation));
 
             static T? Load(string fileLocation)
             {

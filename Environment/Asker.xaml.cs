@@ -23,6 +23,12 @@ namespace Examath.Core.Environment
     {
         private IAskerBlock[] _AskerBlocks;
 
+        /// <summary>
+        /// Creates a new dialog
+        /// </summary>
+        /// <param name="askerOptions">An <see cref="AskerOptions"/> object containing custom properties. 
+        /// Set to null to use default settings</param>
+        /// <param name="askerBlocks">A list of blocks for this dialog</param>
         public Asker(AskerOptions? askerOptions, params IAskerBlock[] askerBlocks)
         {
             InitializeComponent();
@@ -39,6 +45,9 @@ namespace Examath.Core.Environment
             AskerGroup.PopulateBlocks(DisplayListBox, _AskerBlocks);
         }
 
+        /// <summary>
+        /// Initialises the dialog, and loads all the controls
+        /// </summary>
         protected override void OnActivated(EventArgs e)
         {
             bool firstFocus = false;
@@ -72,6 +81,9 @@ namespace Examath.Core.Environment
             }
         }
 
+        /// <summary>
+        /// Allows for the removal of bindings
+        /// </summary>
         protected override void OnClosing(CancelEventArgs e)
         {
             AskerGroup.FinishBlocks(DisplayListBox, _AskerBlocks);
@@ -87,13 +99,41 @@ namespace Examath.Core.Environment
         {
             DialogResult = false;
         }
+
+        /// <summary>
+        /// Creates and shows a new <see cref="Asker"/> dialog
+        /// </summary>
+        /// <param name="askerOptions">The <see cref="AskerOptions"/> for the dialog. Use null for default.</param>
+        /// <param name="askerBlocks"><see cref="IAskerBlock"/>s to display in this dialog</param>
+        /// <returns>The result of the dialog. True if true and false if (false or null).</returns>
+        public static bool Show(AskerOptions? askerOptions, params IAskerBlock[] askerBlocks)
+        {
+            Asker asker = new(askerOptions, askerBlocks);
+            bool result = asker.ShowDialog() ?? false;
+            return result;
+        }
     }
 
+    /// <summary>
+    /// Representing additional options for this dialog
+    /// </summary>
     public class AskerOptions
     {
+        /// <summary>
+        /// Sets the title of the dialog window
+        /// </summary>
         public string Title { get; private set; }
+
+        /// <summary>
+        /// Whether or not the cancel button is visible
+        /// </summary>
         public bool CanCancel { get; private set; }
 
+        /// <summary>
+        /// Creates a new <see cref="AskerOptions"/> instance
+        /// </summary>
+        /// <param name="title">Sets the title of the dialog window</param>
+        /// <param name="canCancel">Whether or not the cancel button is visible</param>
         public AskerOptions(string title = "Input needed", bool canCancel = false)
         {
             Title = title;
