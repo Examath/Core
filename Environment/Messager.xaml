@@ -6,21 +6,21 @@
         xmlns:local="clr-namespace:Examath.Core.Environment"
         mc:Ignorable="d"
         Title="Message" SizeToContent="Height" MinWidth="200" MaxWidth="600" Width="400" WindowStyle="ToolWindow"
-        Style="{StaticResource ContrastWindowStyle}" DataContext="{Binding Source={RelativeSource Self}}">
+        Style="{StaticResource ContrastWindowStyle}">
     <Grid Margin="6">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label Style="{StaticResource OutputTextLabel}" Padding="12"
-               d:Content="Strong and peaceful, wise and brave. Fighting the fight for the whole world to save. We the people will ceaselessly strive"/>
+        <TextBlock x:Name="Output" Padding="12" Margin="2" TextWrapping="Wrap" Background="{StaticResource PanelFaintColourKey}"
+               d:Text="Strong and peaceful, wise and brave. Fighting the fight for the whole world to save. We the people will ceaselessly strive"/>
         <UniformGrid Rows="1" Grid.Row="1">
-            <Button x:Name="OkButton" Click="OkButton_Click" IsDefault="True" 
-                    Foreground="{StaticResource NewColourKey}" d:Content="Yes" Content="{Binding YesButtonText}"/>
-            <Button x:Name="NoButton" Click="NoButton_Click" Visibility="{Binding IsNoButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Foreground="{StaticResource OldColourKey}" d:Content="No" Content="{Binding NoButtonText}"/>
-            <Button x:Name="CancelButton" Click="CancelButton_Click" IsCancel="True" Visibility="{Binding IsCancelButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    >Cancel</Button>
+            <Button x:Name="YesButton" Click="YesButton_Click" IsDefault="True" 
+                    Foreground="{StaticResource NewColourKey}" Content="Ok"/>
+            <Button x:Name="NoButton" Click="NoButton_Click" Visibility="Collapsed"
+                Foreground="{StaticResource OldColourKey}" Content="No"/>
+            <Button x:Name="CancelButton" Click="CancelButton_Click" IsCancel="True" Visibility="Collapsed"
+                    Content="Cancel"/>
         </UniformGrid>        
     </Grid>
 </Window>

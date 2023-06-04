@@ -2,11 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=netstandard">
     
-    <!--#region Converters-->
-    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    <!--#endregion-->
-
-    <!--#region Layout -->
+     <!--#region Layout -->
     <system:Double x:Key="DisabledOpacityKey">0.5</system:Double>
     <Thickness x:Key="ContainerPaddingKey">6</Thickness>
     <Thickness x:Key="ElementMarginKey">2</Thickness>

@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Examath.Core.Environment
 {
@@ -8,11 +10,21 @@ namespace Examath.Core.Environment
     /// </summary>
     public partial class Messager : Window
     {
+        #region Content and Style Properties
 
         /// <summary>
-        /// Gets whether the 'Yes' button was pressed
+        /// gets or sets the message shown in this dialog
         /// </summary>
-        public bool IsYes { get; private set; }
+        public string Text { get; set; } = "";
+
+        /// <summary>
+        /// Gets or sets the style for the text display
+        /// </summary>
+        public ConsoleStyle MessageStyle { get; set; } = ConsoleStyle.Unset;
+
+        #endregion
+
+        #region Buttons Properties
 
         /// <summary>
         /// Gets or sets whether the cancel button is shown
@@ -24,33 +36,26 @@ namespace Examath.Core.Environment
         /// </summary>
         public bool IsNoButtonVisible { get; set; }
 
-        private string _YesButtonText = "Unset";
         /// <summary>
         /// Gets or sets the text for the 'Ok' or 'Yes' button
         /// </summary>
-        public string YesButtonText
-        {
-            get
-            {
-                if (_YesButtonText != "Unset") return _YesButtonText;
-                else
-                {
-                    if (IsNoButtonVisible) return "Yes";
-                    else return "Ok";
-                }
-            }
-            set => _YesButtonText = value;
-        }
+        public string YesButtonText { get; set; } = "";
 
         /// <summary>
         /// Gets or sets the text for the 'no' button
         /// </summary>
-        public string NoButtonText { get; set; } = "No";
+        public string NoButtonText { get; set; } = "";
+
+        #endregion
+
+        #region Output Properties
 
         /// <summary>
-        /// gets or sets the message shown in this dialog
+        /// Gets whether the 'Yes' button was pressed
         /// </summary>
-        public string Text { get; set; } = "";
+        public DialogResult Result { get; private set; }
+
+        #endregion
 
         /// <summary>
         /// Creates a new message dialog
@@ -60,32 +65,103 @@ namespace Examath.Core.Environment
             InitializeComponent();
         }
 
-        private void OkButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Initialises the dialog, and loads all the controls
+        /// </summary>
+        protected override void OnActivated(EventArgs e)
         {
-            IsYes = true;
+            Output.Text = Text;
+
+            switch (MessageStyle)
+            {
+                case ConsoleStyle.H1BlockStyle:
+                    Output.FontWeight = FontWeights.Bold;
+                    break;
+                case ConsoleStyle.NewBlockStyle:
+                    Output.Background = (System.Windows.Media.SolidColorBrush)Resources["MetaPanelColourKey"];
+                    break;
+                case ConsoleStyle.FormatBlockStyle:
+                    Output.Foreground = (System.Windows.Media.SolidColorBrush)Resources["FormatColourKey"];
+                    break;
+                case ConsoleStyle.WarningBlockStyle:
+                    Output.Foreground = (System.Windows.Media.SolidColorBrush)Resources["WarningColourKey"];
+                    break;
+                case ConsoleStyle.ErrorBlockStyle:
+                    Output.Background = (System.Windows.Media.SolidColorBrush)Resources["FormatColourKey"];
+                    break;
+            }
+
+            if (IsCancelButtonVisible) CancelButton.Visibility = Visibility.Visible;
+
+            if (IsNoButtonVisible || NoButtonText != string.Empty)
+            {
+                NoButton.Visibility = Visibility.Visible;
+                YesButton.Content = "Yes";
+                if (NoButtonText != string.Empty) NoButton.Content = NoButtonText;
+            }
+
+            if (YesButtonText != string.Empty) YesButton.Content = YesButtonText;
+
+            base.OnActivated(e);
+        }
+
+        private void YesButton_Click(object sender, RoutedEventArgs e)
+        {
+            Result = System.Windows.Forms.DialogResult.Yes;
             DialogResult = true;
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
+            Result = System.Windows.Forms.DialogResult.No;
             DialogResult = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            Result = System.Windows.Forms.DialogResult.Cancel;
             DialogResult = false;
         }
 
-        public static bool Show(string title, string text, bool isNoButtonVisible = false)
+        public static DialogResult Out(
+            string text,
+            string title = "Message",
+            ConsoleStyle messageStyle = ConsoleStyle.Unset,
+            bool isCancelButtonVisible = false,
+            bool isNoButtonVisible = false,
+            string yesButtonText = "",
+            string noButtonText = ""
+            )
         {
             Messager messager = new()
             {
                 Title = title,
                 Text = text,
+                MessageStyle = messageStyle,
+                IsCancelButtonVisible = isCancelButtonVisible,
                 IsNoButtonVisible = isNoButtonVisible,
+                YesButtonText = yesButtonText,
+                NoButtonText = noButtonText
             };
-            bool result = messager.ShowDialog() ?? false;
-            return result;
+            messager.ShowDialog();
+            return messager.Result;
+        }
+
+        public static DialogResult OutException(
+            Exception e,
+            string context = "",
+            bool isCancelButtonVisible = false,
+            bool isNoButtonVisible = false,
+            string yesButtonText = "",
+            string noButtonText = "")
+        {
+            return Out(
+                e.Message,"Exception",
+                ConsoleStyle.ErrorBlockStyle,
+                isCancelButtonVisible,
+                isNoButtonVisible,
+                noButtonText,
+                yesButtonText);
         }
     }
 }

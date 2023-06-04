@@ -62,7 +62,7 @@ namespace Examath.Core.Environment
             Message.Inlines.Add(new Bold(new Run(context + '\n')));
             Message.Inlines.Add(new Run(e.Message));
             Message.Inlines.Add(new Italic(new Run($"\n@ {e.Source} > {e.TargetSite}")));
-            OutBlock(Message, ConsoleStyle.ErrorBlockStyle, e.StackTrace ?? "NoStck");
+            OutBlock(Message, ConsoleStyle.ErrorBlockStyle, e.StackTrace ?? "StackTrace null");
         }
 
         #endregion

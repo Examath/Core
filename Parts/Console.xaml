@@ -65,6 +65,9 @@
     <Style TargetType="Block" x:Key="FormatBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
         <Setter Property="Foreground" Value="{StaticResource FormatColourKey}"/>
     </Style>
+    <Style TargetType="Block" x:Key="WarningBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="Foreground" Value="{StaticResource WarningColourKey}"/>
+    </Style>
     <Style TargetType="Block" x:Key="ErrorBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
         <Setter Property="Background" Value="{StaticResource ErrorColourKey}"/>
     </Style>
