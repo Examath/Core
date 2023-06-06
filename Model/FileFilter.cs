@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Examath.Core.Model
 {
+    /// <summary>
+    /// Represents an extension filter for file dialogs
+    /// </summary>
     public struct FileFilter
     {
         private string _Header;
@@ -46,6 +50,10 @@ namespace Examath.Core.Model
             _ShowPatternsInHeader = showPattensInHeader;
         }
 
+        /// <summary>
+        /// Returns the string representation of this file filter in the format expected by
+        /// the <see cref="System.Windows.Forms.FileDialog"/>
+        /// </summary>
         public override string ToString()
         {
             if (_ShowPatternsInHeader) return $"{_Header} ({string.Join(", ", _Patterns)})|{string.Join(";", _Patterns)}";

@@ -219,7 +219,84 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    
+    <Style TargetType="{x:Type ListBox}" x:Key="ControlPanelHorizontalListBoxStyle" BasedOn="{StaticResource ContrastListBoxStyle}">
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+        <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                            Padding="0" SnapsToDevicePixels="true">
+                        <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}"
+                                      VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsGrouping" Value="true"/>
+                                <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="IsTabStop" Value="False"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Control">
+                                <Grid x:Name="RootPart" Margin="2" Background="{StaticResource PanelColourKey}" 
+                                      HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="LabelPart" Text="{Binding Path=Tag}"
+                                               VerticalAlignment="Center" Margin="4,2"/>
+                                    <Label x:Name="PART_HelpToolTip" Style="{StaticResource HelpToolTip}" ToolTip="{Binding Path=ToolTip}" Grid.Column="1" HorizontalAlignment="Center"/>
+                                    <ContentPresenter x:Name="PART_Content" Content="{Binding}" Margin="-2" Grid.Row="1" Grid.RowSpan="2" />
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Path=IsEnabled}" Value="False">
+                                        <Setter TargetName="RootPart" Property="Background" Value="{DynamicResource PanelFaintColourKey}"/>
+                                        <Setter TargetName="LabelPart" Property="Opacity" Value="{DynamicResource DisabledOpacityKey}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=Tag}" Value="{x:Null}">
+                                        <Setter TargetName="LabelPart" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="RootPart" Property="Background" Value="Transparent"/>
+                                        <Setter TargetName="PART_Content" Property="Grid.Row" Value="0"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=ToolTip}" Value="{x:Null}">
+                                        <Setter TargetName="PART_HelpToolTip" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="LabelPart" Property="Grid.ColumnSpan" Value="2"/>
+                                    </DataTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style TargetType="ListBox" x:Key="SelectionListBoxStyle">
         <Setter Property="MinWidth" Value="20"/>
