@@ -17,7 +17,5 @@ namespace Examath.Core.Extensions
         {
             return string.IsNullOrEmpty(value) || value == "null";
         }
-
-
     }
 }

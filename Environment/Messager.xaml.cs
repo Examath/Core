@@ -160,8 +160,9 @@ namespace Examath.Core.Environment
                 ConsoleStyle.ErrorBlockStyle,
                 isCancelButtonVisible,
                 isNoButtonVisible,
-                noButtonText,
-                yesButtonText);
+                yesButtonText,
+                noButtonText
+                );
         }
     }
 }
