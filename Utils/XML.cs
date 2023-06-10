@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
+using Examath.Core.Properties;
 
 namespace Examath.Core.Utils
 {
@@ -49,6 +50,25 @@ namespace Examath.Core.Utils
                 using FileStream fileStream = File.Open(fileLocation, FileMode.Open);
                 using var reader = XmlReader.Create(fileStream);
                 return (T?)xmlSerializer.Deserialize(reader);
+            }
+        }
+
+        /// <summary>
+        /// Serialize an object of type <typeparamref name="T"/> to an XML file asynchronously
+        /// </summary>
+        /// <typeparam name="T">The type to serialize from</typeparam>
+        /// <param name="fileLocation">Location of xml file</param>
+        /// <param name="data">The object to serialize</param>
+        public static async Task SaveAsync<T> (string fileLocation, T data)
+        {
+            await Task.Run(() => Save(fileLocation, data));
+
+            void Save(string fileLocation, T data)
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
+                using FileStream fileStream = File.Create(fileLocation);
+                using var writer = XmlWriter.Create(fileStream);
+                xmlSerializer.Serialize(writer, data);
             }
         }
     }
