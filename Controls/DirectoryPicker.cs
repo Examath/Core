@@ -17,34 +17,38 @@ using Ookii.Dialogs.Wpf;
 
 namespace Examath.Core.Controls
 {
+    /*
+    / follow steps 1a or 1b and then 2 to use this custom control in a xaml file.
+    /
+    / step 1a) using this custom control in a xaml file that exists in the current project.
+    / add this xmlnamespace attribute to the root element of the markup file where it is 
+    / to be used:
+    /
+    /     xmlns:mynamespace= "clr-namespace:asowpf.controls"
+    /
+    /
+    / step 1b) using this custom control in a xaml file that exists in a different project.
+    / add this xmlnamespace attribute to the root element of the markup file where it is 
+    / to be used:
+    /
+    /     xmlns:mynamespace= "clr-namespace:asowpf.controls;assembly=asowpf.controls"
+    /
+    / you will also need to add a project reference from the project where the xaml file lives
+    / to this project and rebuild to avoid compilation errors:
+    /
+    /     right click on the target project in the solution explorer and
+    /     "add reference"->"projects"->[browse to and select this project]
+    /
+    /
+    / step 2)
+    / go ahead and use your control in the xaml file.
+    /
+    /     <mynamespace:directorypicker/>
+    /
+    */
+
     /// <summary>
-    /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
-    ///
-    /// Step 1a) Using this custom control in a XAML file that exists in the current project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:ASOWPF.Controls"
-    ///
-    ///
-    /// Step 1b) Using this custom control in a XAML file that exists in a different project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:ASOWPF.Controls;assembly=ASOWPF.Controls"
-    ///
-    /// You will also need to add a project reference from the project where the XAML file lives
-    /// to this project and Rebuild to avoid compilation errors:
-    ///
-    ///     Right click on the target project in the Solution Explorer and
-    ///     "Add Reference"->"Projects"->[Browse to and select this project]
-    ///
-    ///
-    /// Step 2)
-    /// Go ahead and use your control in the XAML file.
-    ///
-    ///     <MyNamespace:DirectoryPicker/>
-    ///
+    /// Represents a control for picking directories
     /// </summary>
     public class DirectoryPicker : Control
     {
@@ -60,12 +64,19 @@ namespace Examath.Core.Controls
 
         #region Directory
 
+
+        /// <summary>
+        /// Gets or sets the location of the selected directory
+        /// </summary>
         public string Directory
         {
             get { return (string)GetValue(DirectoryProperty); }
             set { SetValue(DirectoryProperty, value); }
         }
 
+        /// <summary>
+        /// Backing property for <see cref="Directory"/>
+        /// </summary>
         public static readonly DependencyProperty DirectoryProperty =
             DependencyProperty.Register(
                 "Directory",
@@ -81,6 +92,9 @@ namespace Examath.Core.Controls
                     )
                 );
 
+        /// <summary>
+        /// When <see cref="Directory"/> is changed
+        /// </summary>
         public static readonly RoutedEvent DirectoryChangedEvent =
             EventManager.RegisterRoutedEvent(
                 "DirectoryChanged",
@@ -88,12 +102,18 @@ namespace Examath.Core.Controls
                 typeof(RoutedPropertyChangedEventHandler<string>),
                 typeof(DirectoryPicker));
 
+        /// <summary>
+        /// triggered when <see cref="Directory"/> changes
+        /// </summary>
         public event RoutedPropertyChangedEventHandler<string> DirectoryChanged
         {
             add { base.AddHandler(DirectoryChangedEvent, value); }
             remove { base.RemoveHandler(DirectoryChangedEvent, value); }
         }
 
+        /// <summary>
+        /// Raises <see cref="DirectoryChangedEvent"/>
+        /// </summary>
         protected virtual void OnDirectoryChanged(string oldDirectory, string newDirectory)
         {
             RoutedPropertyChangedEventArgs<string> e = new(oldDirectory, newDirectory)
@@ -118,6 +138,9 @@ namespace Examath.Core.Controls
 
         #region Methods
 
+        /// <summary>
+        /// Finds template parts
+        /// </summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();

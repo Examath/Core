@@ -33,6 +33,9 @@ namespace Examath.Core.Controls
         }
 
         // Using a DependencyProperty as the backing store for IsChecked.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// Property for <see cref="IsChecked"/>: <inheritdoc cref="IsChecked"/>
+        /// </summary>
         public static readonly DependencyProperty IsCheckedProperty =
             DependencyProperty.Register("IsChecked", typeof(bool), typeof(BoolOutput), new PropertyMetadata(false));
 

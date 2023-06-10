@@ -8,6 +8,13 @@
         Title="Message" SizeToContent="Height" MinWidth="200" MaxWidth="600" Width="400" MaxHeight="600" WindowStyle="ToolWindow"
         Topmost="True"
         Style="{StaticResource ContrastWindowStyle}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Parts/base.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid Margin="6">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
