@@ -87,7 +87,7 @@ namespace Examath.Core.Environment
                     Output.Foreground = (System.Windows.Media.SolidColorBrush)Resources["WarningColourKey"];
                     break;
                 case ConsoleStyle.ErrorBlockStyle:
-                    Output.Background = (System.Windows.Media.SolidColorBrush)Resources["FormatColourKey"];
+                    Output.Background = (System.Windows.Media.SolidColorBrush)Resources["ErrorColourKey"];
                     break;
             }
 
