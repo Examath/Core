@@ -47,6 +47,7 @@ namespace Examath.Core.Plugin
         /// The enviorment given as context to the plugin. 
         /// This includes the console and form.
         /// </param>
+        /// <param name="fileLocation">The location of the .dll to load this plugin from</param>
         public ExternalPluginHost(Env env, string fileLocation) : base(env)
         {
             FileLocation = fileLocation;
@@ -141,12 +142,15 @@ namespace Examath.Core.Plugin
             }
         }
 
+        /// <summary>
+        /// Reloads the plugin if the compilation is newer
+        /// </summary>
+        /// <param name="log">The log to output errors to</param>
+        /// <returns></returns>
         [RelayCommand]
-        public async Task Reload()
+        public async Task ReloadAsync(Log log)
         {
             if (File.GetLastWriteTime(FileLocation) <= _CompilationWriteTime) return;
-
-            Log log = _Env.StartLog();
 
             // File location
             if (!File.Exists(FileLocation))
@@ -155,12 +159,10 @@ namespace Examath.Core.Plugin
                 return;
             }
 
-            /// Unloading
+            // Unloading
             if (IsPluginLoaded) await UnloadAsync(log);
 
             // Loading
-            log.StartTiming($"Loading {Path.GetFileName(FileLocation)}");
-
             try
             {
                 await Task.Run(Load);
@@ -171,15 +173,13 @@ namespace Examath.Core.Plugin
                 }
                 else
                 {
-                    log.Out("Assembly loaded, but no plugin found or loaded", ConsoleStyle.FormatBlockStyle);
+                    log.Out($"Assembly {FileName} loaded, but no plugin found or loaded", ConsoleStyle.FormatBlockStyle);
                 }
             }
             catch (Exception e)
             {
-                log.OutException(e, "Loading Plugin");
+                log.OutException(e, $"Loading Plugin {FileName}");
             }
-
-            log.EndTiming();
         }
 
         #endregion

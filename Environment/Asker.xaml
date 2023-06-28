@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Examath.Core.Environment"
         mc:Ignorable="d"
-        Title="Input needed" SizeToContent="Height" MinWidth="200" MaxWidth="600" Width="400" WindowStyle="ToolWindow"
+        Title="Input needed" SizeToContent="Height" MinWidth="200" MaxWidth="600" Width="400" WindowStyle="ToolWindow" Topmost="True"
         Style="{StaticResource ContrastWindowStyle}">
     <Window.Resources>
         <Style TargetType="ListBox" BasedOn="{StaticResource ControlPanelListBoxStyle}">
