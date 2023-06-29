@@ -96,7 +96,7 @@ namespace Examath.Core.Plugin
             {
                 _Plugin = plugin;
                 IsPluginLoaded = true;
-                Color = plugin.Color;
+                Color = plugin.Colour;
                 if (plugin is IExecute || plugin is IExecuteAsync)
                 {
                     _CanExecute = true;
@@ -116,7 +116,7 @@ namespace Examath.Core.Plugin
                 if (_Plugin != null)
                 {
                     _Plugin.Setup(_Env);
-                    Color = _Plugin.Color;                    
+                    Color = _Plugin.Colour;                    
                 }
             }
             catch (Exception e)
@@ -143,7 +143,7 @@ namespace Examath.Core.Plugin
                     {
                         await executeAsync.Execute(_Env);
                     }
-                    Color = _Plugin.Color;
+                    Color = _Plugin.Colour;
                 }
             }
             catch (Exception e)
