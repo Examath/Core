@@ -90,7 +90,7 @@ namespace Examath.Core.Environment
         {
             foreach (IAskerBlock askerBlock in _AskerBlocks)
             {
-                listBox.Items.Add(askerBlock.GetControl());
+                if (askerBlock != null) listBox.Items.Add(askerBlock.GetControl());
             }
         }
 
@@ -100,7 +100,7 @@ namespace Examath.Core.Environment
             {
                 for (int i = 0; i < _AskerBlocks.Length; i++)
                 {
-                    _AskerBlocks[i].Finish((Control)listbox.Items[i]);
+                    if (_AskerBlocks[i] != null) _AskerBlocks[i].Finish((Control)listbox.Items[i]);
                 }
             }
         }

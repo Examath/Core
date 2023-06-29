@@ -98,4 +98,17 @@ namespace Examath.Core.Environment
             _Block.Content = content;
         }
     }
+
+    /// <summary>
+    /// Represents a question that accepts a <see cref="bool"/> using a <see cref="CheckBox"/>
+    /// </summary>
+    public class IntQ : Question<int, TextBoxInput>
+    {
+        /// <summary>
+        /// Creates a new question that accepts a <see cref="bool"/> using a <see cref="CheckBox"/>
+        /// </summary>
+        public IntQ(int defaultValue = 0, string label = "") : base(defaultValue)
+        {
+        }
+    }
 }
