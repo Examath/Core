@@ -103,7 +103,11 @@ namespace Examath.Core.Controls
         public static readonly DependencyPropertyKey IsAbsoluteFileNameProeprtyKey =
             DependencyProperty.RegisterReadOnly(name: "IsAbsoluteFileName", propertyType: typeof(bool), ownerType: typeof(FilePicker), typeMetadata: new PropertyMetadata(false));
 
-        public bool IsAbsoluteFileName => (bool)GetValue(IsAbsoluteFileNameProeprtyKey.DependencyProperty);
+        public bool IsAbsoluteFileName
+        {
+            get => (bool) GetValue(IsAbsoluteFileNameProeprtyKey.DependencyProperty);
+            set => SetValue(IsAbsoluteFileNameProeprtyKey, value);
+        }
         #endregion
 
         #endregion
@@ -134,7 +138,13 @@ namespace Examath.Core.Controls
             var fileDialog = new Microsoft.Win32.OpenFileDialog
             {
                 Filter = (string)GetValue(ExtensionFilterProperty), // Filter files by extension
+                InitialDirectory = (string)GetValue(DirectoryProperty),
             };
+
+            if (GetValue(DirectoryProperty) is string directory1 && Path.Exists(directory1))
+            {
+                fileDialog.InitialDirectory = directory1;
+            }
 
             if (File.Exists((string)GetValue(FileNameProperty)))
             {

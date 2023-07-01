@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Examath.Core.Environment;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -177,12 +178,11 @@ namespace Examath.Core.Model
                 }
                 else
                 {
-                    MessageBox.Show(
-                        "You can either open an existing file (don't forget to Save As if you want to keep the original)" +
+                    Messager.Out(
+                        "You can either open an existing file (don't forget to Save As if you want to keep the original) " +
                         "or type in a filename at the desired directory.\nPress [OK] to continue ...",
                         "File location required",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                        ConsoleStyle.WarningBlockStyle);
                 }
             }
         }

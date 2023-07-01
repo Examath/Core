@@ -13,7 +13,7 @@ namespace Examath.Core.Environment
         #region Content and Style Properties
 
         /// <summary>
-        /// gets or sets the message shown in this dialog
+        /// Gets or sets the message shown in this dialog
         /// </summary>
         public string Text { get; set; } = "";
 
@@ -53,7 +53,7 @@ namespace Examath.Core.Environment
         /// <summary>
         /// Gets whether the 'Yes' button was pressed
         /// </summary>
-        public DialogResult Result { get; private set; }
+        public DialogResult Result { get; private set; } = System.Windows.Forms.DialogResult.Cancel;
 
         #endregion
 
@@ -123,6 +123,19 @@ namespace Examath.Core.Environment
             DialogResult = false;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Messager"/> dialog and shows it to the user.
+        /// </summary>
+        /// <param name="text">The content of the dialog</param>
+        /// <param name="title">The title of the dialog window</param>
+        /// <param name="messageStyle">The style of the message</param>
+        /// <param name="isCancelButtonVisible">When true the cancel button is visible</param>
+        /// <param name="isNoButtonVisible">When true the no button is visible</param>
+        /// <param name="yesButtonText">Overrides the yes button text. By default this is 'Ok' or 'Yes' if the no button is visible</param>
+        /// <param name="noButtonText">Sets the text of the no button, and ensures it is visible</param>
+        /// <returns><see cref="DialogResult.Yes"/> if the Ok or Yes button is clicked, 
+        /// <see cref="DialogResult.No"/> if the No button is clicked and 
+        /// <see cref="DialogResult.Cancel"/> if the cancel button is clicked or the dialog is closed</returns>
         public static DialogResult Out(
             string text,
             string title = "Message",

@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Examath.Core.Plugin
 {
+    /// <summary>
+    /// Hosts an <see cref="IPlugin"/> defined at compile-time
+    /// </summary>
     public class InternalPluginHost : PluginHost
     {
-        private Type _Type;
-
         /// <summary>
         /// Creates a new <see cref="PluginHost"/> to host a single plugin
         /// </summary>
@@ -34,7 +35,7 @@ namespace Examath.Core.Plugin
         /// </summary>
         public override void Load()
         {
-            InitialisePluginFromType(_Type);
+            if(_Type != null) CreateInstanceOfPluginType();
         }
     }
 }

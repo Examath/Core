@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using Examath.Core.Environment;
+﻿using Examath.Core.Environment;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 namespace Examath.Core.Plugin
 {
     /// <summary>
-    /// loads, hosts and runs an <see cref="IPlugin"/> derivative
+    /// Loads, hosts and runs an <see cref="IPlugin"/> derivative from a file
     /// </summary>
     public partial class ExternalPluginHost : PluginHost
     {
@@ -19,6 +18,9 @@ namespace Examath.Core.Plugin
 
         private ShadowAssemblyLoadContext? _PluginLoadContext;
 
+        /// <summary>
+        /// The time when the currently loaded plugin compilation file was last written to.
+        /// </summary>
         public DateTime _CompilationWriteTime = DateTime.MinValue;
 
         #endregion
@@ -44,7 +46,7 @@ namespace Examath.Core.Plugin
         /// in the specified <paramref name="env"/>
         /// </summary>
         /// <param name="env">
-        /// The enviorment given as context to the plugin. 
+        /// The environment given as context to the plugin. 
         /// This includes the console and form.
         /// </param>
         /// <param name="fileLocation">The location of the .dll to load this plugin from</param>
@@ -52,11 +54,6 @@ namespace Examath.Core.Plugin
         {
             FileLocation = fileLocation;
         }
-
-        #endregion
-
-        #region Static Methods
-
 
         #endregion
 
@@ -76,7 +73,8 @@ namespace Examath.Core.Plugin
             {
                 if (typeof(IPlugin).IsAssignableFrom(type))
                 {
-                    InitialisePluginFromType(type);
+                    _Type = type;
+                    CreateInstanceOfPluginType();
                     break;
                 }
             }
@@ -86,6 +84,9 @@ namespace Examath.Core.Plugin
 
         #region Unload
 
+        /// <summary>
+        /// Gets a list of weak references to old assembly contexts, indicating whether plugins unloaded properly
+        /// </summary>
         public List<WeakReference> OldPluginContextReferences { get; private set; } = new();
 
         private int _AliveInstances = 0;
@@ -105,11 +106,7 @@ namespace Examath.Core.Plugin
         {
             if (_PluginLoadContext != null)
             {
-                // UI
                 log?.StartTiming("Unloading");
-                Name = EMPTY_NAME;
-                _CanExecute = false;
-                ExecuteCommand.NotifyCanExecuteChanged();
 
                 // Plugin
                 WeakReference pluginWeakReference = new(_PluginLoadContext, trackResurrection: true);
@@ -117,8 +114,13 @@ namespace Examath.Core.Plugin
 
                 // Nulling and unloading
                 _Plugin = null;
+                _Type = null;
                 _PluginLoadContext.Unload();
                 _PluginLoadContext = null;
+
+                // UI
+                CheckCanExecute();
+                Name = EMPTY_NAME;
 
                 // Wait for unload
                 await Task.Delay(100);
@@ -145,40 +147,39 @@ namespace Examath.Core.Plugin
         /// <summary>
         /// Reloads the plugin if the compilation is newer
         /// </summary>
-        /// <param name="log">The log to output errors to</param>
-        /// <returns></returns>
-        [RelayCommand]
-        public async Task ReloadAsync(Log log)
+        public override async Task ReloadAsync()
         {
-            if (File.GetLastWriteTime(FileLocation) <= _CompilationWriteTime) return;
-
-            // File location
             if (!File.Exists(FileLocation))
             {
-                log.Out($"Compilation {FileName} not found", ConsoleStyle.ErrorBlockStyle);
+                _Env.Out($"Compilation {FileName} not found", ConsoleStyle.WarningBlockStyle);
                 return;
             }
-
-            // Unloading
-            if (IsPluginLoaded) await UnloadAsync(log);
-
-            // Loading
-            try
+            else if (File.GetLastWriteTime(FileLocation) > _CompilationWriteTime) // Reload from File
             {
-                await Task.Run(Load);
-                ExecuteCommand.NotifyCanExecuteChanged();
-                if (IsPluginLoaded)
+                // Unloading
+                if (IsPluginLoaded) await UnloadAsync();
+
+                // Loading
+                try
                 {
-                    CallSetup();
+                    Load();
+                    if (IsPluginLoaded)
+                    {
+                        CallSetup();
+                    }
+                    else
+                    {
+                        _Env.Out($"Assembly {FileName} loaded, but no plugin found or loaded", ConsoleStyle.FormatBlockStyle);
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    log.Out($"Assembly {FileName} loaded, but no plugin found or loaded", ConsoleStyle.FormatBlockStyle);
+                    _Env.OutException(e, $"Re-loading Plugin {FileName}");
                 }
             }
-            catch (Exception e)
+            else // Re-initialise
             {
-                log.OutException(e, $"Loading Plugin {FileName}");
+                await base.ReloadAsync();
             }
         }
 

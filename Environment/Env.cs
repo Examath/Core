@@ -115,10 +115,11 @@ namespace Examath.Core.Environment
         /// with a single <see cref="StringQ"/> (<see cref="string"/>, <see cref="TextBoxInput"/>) question
         /// </summary>
         /// <param name="question">Title of dialog</param>
+        /// <param name="defaultValue">The default string value shown in the dialog, by default an empty string</param>
         /// <returns>A string that may contain input from the user. This may be blank.</returns>
-        public string In(string question = "Enter input")
+        public string In(string question = "Enter input", string defaultValue = "")
         {
-            StringQ stringQ = new();
+            StringQ stringQ = new(defaultValue: defaultValue);
             Asker.Show(new(title: question), new[] { stringQ });
             return stringQ.Value;
         }
