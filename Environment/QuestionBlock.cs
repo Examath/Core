@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using Examath.Core.Controls;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -140,19 +141,29 @@ namespace Examath.Core.Environment
 
     public class FilePickerInput : QuestionBlock
     {
+        public string Directory { get; set; } = "";
+
+        public string ExtensionFilter { get; set; } = "All files|*.*";
+
+        public bool UseSaveFileDialog { get; set; } = false;
+
         public FilePickerInput() : base()
         {
             DisplayDependencyProperty = Controls.FilePicker.FileNameProperty;
         }
 
         public FilePickerInput(object source, string property, string label = "")
-            : base(source, property, label, Controls.FilePicker.FileNameProperty)
+            : base(source, property, label, FilePicker.FileNameProperty)
         {
         }
 
         public override Control GetControl()
         {
-            return Initialise(new Controls.FilePicker());
+            FilePicker filePicker = new();
+            filePicker.ExtensionFilter = ExtensionFilter;
+            filePicker.Directory = Directory;
+            filePicker.UseSaveFileDialog = UseSaveFileDialog;
+            return Initialise(filePicker);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -98,6 +99,16 @@ namespace Examath.Core.Controls
         internal static readonly DependencyProperty DirectoryProperty =
             DependencyProperty.Register("Directory", typeof(string), typeof(FilePicker), new PropertyMetadata(""));
 
+        public bool UseSaveFileDialog
+        {
+            get { return (bool)GetValue(UseSaveFileDialogProperty); }
+            set { SetValue(UseSaveFileDialogProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for UseSaveFileDialog.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty UseSaveFileDialogProperty =
+            DependencyProperty.Register("UseSaveFileDialog", typeof(bool), typeof(FilePicker), new PropertyMetadata(false));
+
         #region IsAbsoluteFileName
 
         public static readonly DependencyPropertyKey IsAbsoluteFileNameProeprtyKey =
@@ -105,7 +116,7 @@ namespace Examath.Core.Controls
 
         public bool IsAbsoluteFileName
         {
-            get => (bool) GetValue(IsAbsoluteFileNameProeprtyKey.DependencyProperty);
+            get => (bool)GetValue(IsAbsoluteFileNameProeprtyKey.DependencyProperty);
             set => SetValue(IsAbsoluteFileNameProeprtyKey, value);
         }
         #endregion
@@ -135,11 +146,11 @@ namespace Examath.Core.Controls
         internal void OnClick(object sender, RoutedEventArgs e)
         {
             // Configure open file dialog box
-            var fileDialog = new Microsoft.Win32.OpenFileDialog
-            {
-                Filter = (string)GetValue(ExtensionFilterProperty), // Filter files by extension
-                InitialDirectory = (string)GetValue(DirectoryProperty),
-            };
+            FileDialog fileDialog = ((bool)GetValue(UseSaveFileDialogProperty)) ? new SaveFileDialog() : new OpenFileDialog();
+
+            fileDialog.Filter = (string)GetValue(ExtensionFilterProperty); // Filter files by extension
+            fileDialog.InitialDirectory = (string)GetValue(DirectoryProperty);
+
 
             if (GetValue(DirectoryProperty) is string directory1 && Path.Exists(directory1))
             {
@@ -154,7 +165,7 @@ namespace Examath.Core.Controls
 
             if (Tag is string tag)
             {
-                fileDialog.Title = $"Select {tag}";
+                fileDialog.Title = ((bool)GetValue(UseSaveFileDialogProperty)) ? $"Choose {tag}" : $"Select {tag}";
             }
 
             // Show open file dialog box
