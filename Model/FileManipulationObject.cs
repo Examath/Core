@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace Examath.Core.Model
 {
@@ -28,6 +29,10 @@ namespace Examath.Core.Model
 
         #region Init
 
+        /// <summary>
+        /// Creates a view model associated with a file with the specified <see cref="FileFilter"/>
+        /// </summary>
+        /// <param name="fileFilters">The file filter (excluding importers and exporters) of the data file of this model</param>
         public FileManipulationObject(params FileFilter[] fileFilters)
         {
             List<FileFilter> filtersList = new();
@@ -40,24 +45,54 @@ namespace Examath.Core.Model
 
         #region Abstract
 
+        private string? _FileLocation;
         /// <summary>
-        /// The property storing the location of this file, as selected by file dialogs.
+        /// The property storing the location of this file.
         /// </summary>
-        /// <remarks>
-        /// Overide this property for things like persistence
-        /// Setter must call <c>SaveCommand.NotifyCanExecuteChanged();</c> when this property changes
-        /// </remarks>
-        public abstract string? FileLocation { get; set; }
+        public string? FileLocation
+        {
+            get => _FileLocation;
+            set
+            {
+                if (SetProperty(ref _FileLocation, value))
+                {
+                    FileName = Path.GetFileName(_FileLocation);
+                    OnPropertyChanged(nameof(FileName));
+                };
+            }
+        }
 
+        /// <summary>
+        /// Gets the file name, including extension, of the file given by <see cref="FileLocation"/>
+        /// </summary>
+        public string? FileName { get; private set; }
+
+        #endregion
+
+        #region Abstract Methods
+
+        /// <summary>
+        /// Create a new, blank file
+        /// </summary>
         public abstract void CreateFile();
 
         /// <summary>
-        /// Abstract async method that loads the data from the file at <see cref="FileLocation"/>
+        /// Loads the data from the file at <see cref="FileLocation"/>. This method may throw exceptions.
+        /// </summary>
+        public abstract void LoadFile();
+
+        /// <summary>
+        /// Loads the data from the file at <see cref="FileLocation"/> asynchronously. This method may throw exceptions.
         /// </summary>
         public abstract Task LoadFileAsync();
 
         /// <summary>
-        /// Abstract async method that saves the data to a file at <see cref="FileLocation"/>
+        /// Saves the data to a file at <see cref="FileLocation"/>
+        /// </summary>
+        public abstract void SaveFile();
+
+        /// <summary>
+        /// Saves the data to a file at <see cref="FileLocation"/> asynchronously. This method may throw exceptions.
         /// </summary>
         public abstract Task SaveFileAsync();
 
@@ -66,7 +101,7 @@ namespace Examath.Core.Model
         #region Open & Load
 
         /// <summary>
-        /// Attempts to synchronously <see cref="LoadFileAsync"/> this object from the file at <see cref="FileLocation"/>
+        /// Attempts to synchronously <see cref="LoadFileAsync"/> this object from the file at <see cref="FileLocation"/>. This method may throw exceptions.
         /// </summary>
         /// <remarks>
         /// Call for autoloading at application startup
@@ -74,14 +109,14 @@ namespace Examath.Core.Model
         /// <returns>
         /// True if file exists and is isLoaded without error, and false otherwise.
         /// </returns>
-        public async Task<bool> TryLoad()
+        public bool TryLoad()
         {
             if (File.Exists(FileLocation))
             {
                 try
                 {
-                    IsModified = false;
-                    await LoadFileAsync();
+                    ResetNotifyChanges("");
+                    LoadFile();
                     return true;
                 }
                 catch (Exception)
@@ -96,7 +131,7 @@ namespace Examath.Core.Model
         }
 
         /// <summary>
-        /// Opens a <see cref=" Microsoft.Win32.OpenFileDialog"/> and attempts to load the user-selected file.
+        /// Opens a <see cref=" Microsoft.Win32.OpenFileDialog"/> and attempts to load the user-selected file asynchronously inside a try-catch loop.
         /// </summary>
         /// <remarks>
         /// Checks if <see cref="IsUserReadyToPartWithCurrentFile"/> before executing. Also sets <see cref="FileLocation"/> to the result of the dialog.
@@ -104,7 +139,7 @@ namespace Examath.Core.Model
         [RelayCommand]
         public async Task Open()
         {
-            if (!(await IsUserReadyToPartWithCurrentFile())) return;
+            if (!await IsUserReadyToPartWithCurrentFile()) return;
 
             Microsoft.Win32.OpenFileDialog dialog = new()
             {
@@ -123,7 +158,7 @@ namespace Examath.Core.Model
                 FileLocation = dialog.FileName;
                 try
                 {
-                    IsModified = false;
+                    ResetNotifyChanges("");
                     await LoadFileAsync();
                 }
                 catch (Exception e)
@@ -162,7 +197,7 @@ namespace Examath.Core.Model
                     {
                         if (File.Exists(FileLocation))
                         {
-                            IsModified = false;
+                            ResetNotifyChanges("");
                             await LoadFileAsync();
                         }
                         else
@@ -188,55 +223,146 @@ namespace Examath.Core.Model
         }
 
         /// <summary>
-        /// Shows a <see cref="MessageBox"/> for error <paramref name="e"/>. Overide for custom prompt.
+        /// Shows a <see cref="MessageBox"/> for error <paramref name="e"/>. Override for custom prompt.
         /// </summary>
         /// <param name="e">The error to display</param>
         protected virtual void OnLoadError(Exception e)
         {
-            MessageBox.Show($"A {e.GetType().Name} was thrown when attempting to load {Path.GetFileName(FileLocation)}\n" +
-                $"Details: {e.Message}", "Could not open file", MessageBoxButton.OK, MessageBoxImage.Error);
+            Messager.Out($"A {e.GetType().Name} was thrown when attempting to load {FileName}\n" +
+                $"Details: {e.Message}", "Could not open file", ConsoleStyle.ErrorBlockStyle);
+        }
+
+        #endregion
+
+        #region Modification Tracking
+
+        private int _ChangesCount = 0;
+        /// <summary>
+        /// Gets the number of changes that have been made since last save
+        /// </summary>
+        public int ChangesCount
+        {
+            get => _ChangesCount;
+            private set => SetProperty(ref _ChangesCount, value);
+        }
+
+        /// <summary>
+        /// Gets whether this model has been modified
+        /// </summary>
+        /// <remarks>
+        /// To set as modified, call <see cref="NotifyChange(object?, EventArgs?)"/>
+        /// </remarks>
+        public bool IsModified => ChangesCount > 0;
+
+        private string _LastChangeDescription = "Loaded";
+        /// <summary>
+        /// Gets or sets 
+        /// </summary>
+        public string LastChangeDescription
+        {
+            get => _LastChangeDescription;
+            private set => SetProperty(ref _LastChangeDescription, value);
+        }
+
+
+        /// <summary>
+        /// Updates <see cref="SaveCommand"/> can execute and other properties
+        /// </summary>
+        /// <param name="label">The object that made the last change. It's ToString is added to <see cref="ChangesDescription"/> if it is not null</param>
+        /// <param name="e"></param>
+        public void NotifyChange(object? label = null, EventArgs? e = null)
+        {
+            ChangesCount++;
+            LastChangeDescription = (label == null) ? $"{ChangesCount} changes" : $"{ChangesCount} changes: {label}";
+
+            OnPropertyChanged(nameof(IsModified));
+            SaveCommand.NotifyCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// Resets properties associated with <see cref="NotifyChange(object?, EventArgs?)"/>
+        /// </summary>
+        /// <param name="label">Label for <see cref="ChangesDescription"/>, by default 'Saved'</param>
+        public void ResetNotifyChanges(string label = "Saved")
+        {
+            ChangesCount = 0;
+            LastChangeDescription = label;
+
+            OnPropertyChanged(nameof(IsModified));
+            SaveCommand.NotifyCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// If this file <see cref="IsModified"/>, a <see cref="ShowUnsavedChangesPrompt"/>
+        /// is shown and if the user intends to save, either the <see cref="Save"/> 
+        /// or <see cref="SaveAs"/> commands are called.
+        /// </summary>
+        /// <returns>False if user intends to cancel their command</returns>
+        public async Task<bool> IsUserReadyToPartWithCurrentFile()
+        {
+            if (IsModified)
+            {
+                DialogResult dialogResult = ShowUnsavedChangesPrompt();
+
+                switch (dialogResult)
+                {
+                    case DialogResult.Cancel:
+                        return false;
+                    case DialogResult.Yes:
+                        if (File.Exists(FileLocation))
+                        {
+                            await Save();
+                        }
+                        else
+                        {
+                            await SaveAs();
+                        }
+                        return true;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Shows a <see cref="MessageBox"/> to tell if user intends to save, discard or cancel
+        /// any unsaved changes. Override for custom prompting behaviour.
+        /// </summary>
+        /// <returns>The result of the <see cref="MessageBoxButton.YesNoCancel"/></returns>
+        protected virtual DialogResult ShowUnsavedChangesPrompt()
+        {
+            return Messager.Out(
+                    $"Would you like to save the {ChangesCount} changes to {FileName}",
+                    "Unsaved changes",
+                    ConsoleStyle.WarningBlockStyle,
+                    isNoButtonVisible: true,
+                    isCancelButtonVisible: true);
         }
 
         #endregion
 
         #region Save
 
-        private bool _IsModified = false;
         /// <summary>
-        /// Gets or sets whether the data represented by this <see cref="FileManipulationObject"/> has been modified.
-        /// </summary>
-        /// <remarks>
-        /// Set <c>IsModified = true;</c> in the setter of the property containing the data.
-        /// </remarks>
-        public bool IsModified
-        {
-            get => _IsModified;
-            set
-            {
-                if (SetProperty(ref _IsModified, value))
-                {
-                    SaveCommand.NotifyCanExecuteChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns true if the model is modified and the file exists.
+        /// Gets or sets whether
         /// </summary>
         /// <returns></returns>
-        public bool CanSave()
-        {
-            return _IsModified && File.Exists(FileLocation);
-        }
+        public bool CanSave() => IsModified && FileLocation != null;
 
         /// <summary>
-        /// Calls <see cref="SaveFileAsync"/>
+        /// Calls <see cref="SaveFileAsync"/> inside a try-catch block
         /// </summary>
         [RelayCommand(CanExecute = nameof(CanSave))]
         public async Task Save()
         {
-            await SaveFileAsync();
-            IsModified = false;
+            try
+            {
+                await SaveFileAsync();
+                ResetNotifyChanges();
+            }
+            catch (Exception e)
+            {
+                Messager.OutException(e, "Saving");
+            }
         }
 
         /// <summary>
@@ -265,51 +391,6 @@ namespace Examath.Core.Model
                 FileLocation = dialog.FileName;
                 await Save();
             }
-        }
-
-        /// <summary>
-        /// If this file <see cref="IsModified"/>, a <see cref="UnsavedChangesPrmpt"/>
-        /// is shown and if the user intends to save, either the <see cref="Save"/> 
-        /// or <see cref="SaveAs"/> commands are called.
-        /// </summary>
-        /// <returns>False if user intends to cancel their command</returns>
-        public async Task<bool> IsUserReadyToPartWithCurrentFile()
-        {
-            if (IsModified)
-            {
-                MessageBoxResult messageBoxResult = UnsavedChangesPrmpt();
-
-                switch (messageBoxResult)
-                {
-                    case MessageBoxResult.Cancel:
-                        return false;
-                    case MessageBoxResult.Yes:
-                        if (CanSave())
-                        {
-                            await Save();
-                        }
-                        else
-                        {
-                            await SaveAs();
-                        }
-                        return true;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Shows a <see cref="MessageBox"/> to tell if user intends to save, discard or cancel
-        /// any unsaved changes. Overide for custom prompting behavior.
-        /// </summary>
-        /// <returns>The result of the <see cref="MessageBoxButton.YesNoCancel"/></returns>
-        protected virtual MessageBoxResult UnsavedChangesPrmpt()
-        {
-            return MessageBox.Show(
-                    $"Would you like to save any changes to {Path.GetFileName(FileLocation)}",
-                    "Unsaved changes",
-                    MessageBoxButton.YesNoCancel,
-                    MessageBoxImage.Question);
         }
 
         #endregion
