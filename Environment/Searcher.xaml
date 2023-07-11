@@ -1,0 +1,35 @@
+﻿<Window x:Class="Examath.Core.Environment.Searcher"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Examath.Core.Environment"
+        mc:Ignorable="d"
+        Title="Searcher" MinWidth="200" Width="300" MaxWidth="600" MinHeight="100" Height="300" MaxHeight="600" WindowStyle="ToolWindow"
+        Topmost="True"
+        Style="{StaticResource ContrastWindowStyle}" d:DataContext="{d:SampleData ItemCount=8}" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource Source="{Binding}" x:Key="Source" IsLiveFilteringRequested="True" IsLiveSortingRequested="True">
+            
+        </CollectionViewSource>
+    </Window.Resources>
+    <Grid Margin="6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" />
+        <ListBox x:Name="View" Grid.Row="2" Style="{StaticResource ContrastListBoxStyle}" 
+                 ItemsSource="{Binding Source={StaticResource Source}}" SelectionChanged="View_SelectionChanged">
+            
+        </ListBox>
+        <UniformGrid Rows="1" Grid.Row="3">
+            <Button x:Name="OkButton" Click="OkButton_Click" IsDefault="True"
+                    Foreground="{StaticResource NewColourKey}">Ok</Button>
+            <Button x:Name="CancelButton" Click="CancelButton_Click" IsCancel="True"
+                    >Cancel</Button>
+        </UniformGrid>
+    </Grid>
+</Window>
