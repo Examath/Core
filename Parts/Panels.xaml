@@ -220,6 +220,38 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <!--#endregion-->    
-    
+    <!--#endregion-->
+
+    <!--#region GroupBox -->
+
+    <Style TargetType="GroupBox">
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundColourKey}"/>
+        <Setter Property="Background" Value="{DynamicResource PanelColourKey}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GroupBox">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Background="{DynamicResource PanelFaintColourKey}">
+                            <ContentPresenter Margin="6 2"
+                              ContentSource="Header"
+                              RecognizesAccessKey="True" />
+                        </Border>
+
+                        <Border Grid.Row="1" Background="{TemplateBinding Background}">
+                            <ContentPresenter Margin="{TemplateBinding Padding}" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+
 </ResourceDictionary>
