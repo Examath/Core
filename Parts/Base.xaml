@@ -393,6 +393,12 @@
         </Setter>
     </Style>
 
+    <Style TargetType="ProgressBar">
+        <Setter Property="BorderBrush" Value="{DynamicResource PanelColourKey}"/>
+        <Setter Property="Foreground" Value="{DynamicResource NewColourKey}"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+
     <!--#endregion-->
 
 </ResourceDictionary>
