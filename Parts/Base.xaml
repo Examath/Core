@@ -395,6 +395,8 @@
 
     <Style TargetType="ProgressBar">
         <Setter Property="BorderBrush" Value="{DynamicResource PanelColourKey}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Background" Value="{DynamicResource PanelFaintColourKey}"/>
         <Setter Property="Foreground" Value="{DynamicResource NewColourKey}"/>
         <Setter Property="Margin" Value="2"/>
     </Style>

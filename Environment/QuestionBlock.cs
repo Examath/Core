@@ -1,4 +1,5 @@
 ﻿using Examath.Core.Controls;
+using System.Collections;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
@@ -164,6 +165,28 @@ namespace Examath.Core.Environment
             filePicker.Directory = Directory;
             filePicker.UseSaveFileDialog = UseSaveFileDialog;
             return Initialise(filePicker);
+        }
+    }
+
+    public class ComboBoxInput : QuestionBlock
+    {
+        public IEnumerable? ItemsSource { get; set; }
+
+        public ComboBoxInput() : base()
+        {
+            DisplayDependencyProperty = System.Windows.Controls.Primitives.Selector.SelectedItemProperty;
+        }
+
+        public ComboBoxInput(object source, string property, IEnumerable itemsSource, string label = "")
+            : base(source, property, label, System.Windows.Controls.Primitives.Selector.SelectedItemProperty)
+        {
+            ItemsSource = itemsSource;
+        }
+
+        public override Control GetControl()
+        {
+            ComboBox comboBox = new() { ItemsSource = ItemsSource };
+            return Initialise(comboBox);
         }
     }
 }

@@ -1,0 +1,25 @@
+﻿<Window x:Class="Examath.Core.Environment.ProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Examath.Core.Environment"
+        Title="Loading" SizeToContent="Height" MinWidth="200" MaxWidth="600" Width="400" MinHeight="150" MaxHeight="600" WindowStyle="ToolWindow" Topmost="True" Style="{StaticResource ContrastWindowStyle}"
+        mc:Ignorable="d">
+    <Grid Margin="6">
+        <ItemsControl ItemsSource="{Binding}" d:ItemsSource="{d:SampleData ItemCount=2}" VerticalAlignment="Center">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ProgressWindowTask}">
+                    <Grid Margin="6">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="24"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="{Binding Header}" VerticalAlignment="Top" />
+                        <ProgressBar Value="{Binding Value}" Maximum="{Binding Maximum}" Margin="4" Grid.Row="1" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Window>
