@@ -43,7 +43,7 @@ namespace Examath.Core.Model
 
         #endregion
 
-        #region Abstract
+        #region File Location
 
         private string? _FileLocation;
         /// <summary>
@@ -58,6 +58,7 @@ namespace Examath.Core.Model
                 {
                     FileName = Path.GetFileName(_FileLocation);
                     OnPropertyChanged(nameof(FileName));
+                    SaveCommand.NotifyCanExecuteChanged();
                 };
             }
         }
@@ -372,7 +373,7 @@ namespace Examath.Core.Model
         /// Also sets <see cref="FileLocation"/> to the result of the dialog.
         /// </remarks>
         [RelayCommand]
-        private async Task SaveAs()
+        public async Task SaveAs()
         {
             // Configure save file dialog box
             Microsoft.Win32.SaveFileDialog dialog = new()
