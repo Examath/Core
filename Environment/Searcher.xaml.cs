@@ -100,8 +100,15 @@ namespace Examath.Core.Environment
                 DataContext = dataContext,
                 Title = title
             };
-            searcher.ShowDialog();
-            return searcher.SelectedItem;
+
+            if(searcher.ShowDialog() == true)
+            {
+                return searcher.SelectedItem;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

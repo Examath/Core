@@ -107,7 +107,7 @@ namespace Examath.Core.Environment
         /// <summary>
         /// Creates a new question that accepts a <see cref="bool"/> using a <see cref="CheckBox"/>
         /// </summary>
-        public IntQ(int defaultValue = 0, string label = "") : base(defaultValue)
+        public IntQ(int defaultValue = 0, string label = "") : base(defaultValue, label)
         {
         }
     }

@@ -34,6 +34,13 @@ namespace Examath.Core.Environment
 
         public UpdateSourceTrigger UpdateSourceTrigger { get; set; } = UpdateSourceTrigger.Default;
 
+        public IValueConverter? Converter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parameter to be used on the converter
+        /// </summary>
+        public object ConverterParameter { get; set; }
+
         public QuestionBlock()
         {
 
@@ -61,6 +68,13 @@ namespace Examath.Core.Environment
                 Mode = BindingMode.TwoWay,
                 UpdateSourceTrigger = UpdateSourceTrigger,
             };
+
+            if (Converter != null)
+            {
+                binding.Converter = Converter;
+                binding.ConverterParameter = ConverterParameter;
+            }
+
             BindingOperations.SetBinding(control, DisplayDependencyProperty, binding);
             if (!string.IsNullOrWhiteSpace(Label)) control.Tag = Label;
             if (!string.IsNullOrWhiteSpace(HelpText)) control.ToolTip = HelpText;
@@ -82,6 +96,9 @@ namespace Examath.Core.Environment
     /// </summary>
     public class TextBoxInput : QuestionBlock
     {
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public TextBoxInput() : base()
         {
             DisplayDependencyProperty = TextBox.TextProperty;
@@ -99,9 +116,59 @@ namespace Examath.Core.Environment
         {
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns></returns>
         public override Control GetControl()
         {
             return Initialise(new TextBox());
+        }
+    }
+
+    /// <summary>
+    /// Represents a question that uses a <see cref="TextBox"/> in the <see cref="Asker"/> dialog to edit a list
+    /// </summary>
+    public class ListTextBoxInput : QuestionBlock
+    {
+        /// <summary>
+        /// Gets or sets the separator to use
+        /// </summary>
+        public string Separator = "\n";
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public ListTextBoxInput() : base()
+        {
+            DisplayDependencyProperty = TextBox.TextProperty;
+            Converter = new Converters.ListToStringConverter();
+        }
+
+        /// <summary>
+        /// Creates a question meant for a a <see cref="TextBox"/>
+        /// </summary>
+        /// <param name="source">Source of binding</param>
+        /// <param name="property">Property to bind</param>
+        /// <param name="label">Optional label</param>
+        /// <param name="helpText">Optional help text</param>
+        public ListTextBoxInput(object source, string property, string label = "")
+            : base(source, property, label, TextBox.TextProperty)
+        {
+            Converter = new Converters.ListToStringConverter();
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns></returns>
+        public override Control GetControl()
+        {
+            TextBox textBox = new TextBox();
+            if (Separator.Contains('\n')) textBox.AcceptsReturn = true;
+            if (Separator.Contains('\t')) textBox.AcceptsTab = true;
+            ConverterParameter = Separator;
+            return Initialise(textBox);
         }
     }
 
