@@ -134,7 +134,7 @@ namespace Examath.Core.Environment
         /// <summary>
         /// Gets or sets the separator to use
         /// </summary>
-        public string Separator = "\n";
+        public string Separator = "\r\n";
 
         /// <summary>
         /// <inheritdoc/>
