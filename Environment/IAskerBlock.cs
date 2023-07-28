@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Markup;
 
 namespace Examath.Core.Environment
@@ -15,6 +16,10 @@ namespace Examath.Core.Environment
     /// </summary>
     public interface IAskerBlock
     {
+        /// <summary>
+        /// Creates a Element associated with this AskerBlock
+        /// </summary>
+        /// <returns>The created control</returns>
         internal Control GetControl();
 
         internal void Finish(Control control);
@@ -27,31 +32,68 @@ namespace Examath.Core.Environment
     {
         private object _Content;
         private string _ContentStringFormat;
+        private string? _BindingProperty = null;
 
         /// <summary>
         /// Defines an <see cref="AskerNote"/> with the specified <paramref name="content"/>
         /// </summary>
         /// <param name="content">The content of the displayed <see cref="Label"/></param>
-        /// <param name="contentStringFormat">Sets the <see cref="Label.ContentStringFormat"/> of the displayed <see cref="Label"/></param>
+        /// <param name="contentStringFormat">Sets the <see cref="ContentControl.ContentStringFormat"/> of the displayed <see cref="Label"/></param>
         public AskerNote(object content, string contentStringFormat = "")
         {
             _Content = content;
             _ContentStringFormat = contentStringFormat;
         }
 
+        /// <summary>
+        /// Defines an <see cref="AskerNote"/> bound to the specified <paramref name="source"/>
+        /// </summary>
+        /// <param name="source">Source of binding</param>
+        /// <param name="property">Property to bind</param>
+        /// <param name="contentStringFormat">Sets the <see cref="ContentControl.ContentStringFormat"/> of the displayed <see cref="Label"/></param>
+        public AskerNote(object source, string property, string contentStringFormat = "")
+        {
+            _Content = source;
+            _BindingProperty = property;
+            _ContentStringFormat = contentStringFormat;
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns></returns>
         public Control GetControl()
         {
-            Label label = new()
+            Label label = new();
+
+            if (_BindingProperty != null)
             {
-                Content = _Content,
+                Binding binding = new()
+                {
+                    Source = _Content,
+                    Path = new PropertyPath(_BindingProperty),
+                    Mode = BindingMode.OneWay,
+                };
+
+                BindingOperations.SetBinding(label, ContentControl.ContentProperty, binding);
+            }
+            else
+            {
+                label.Content = _Content;
             };
+
             if (_ContentStringFormat != string.Empty) label.ContentStringFormat = _ContentStringFormat;
+
             return label;
         }
 
+        /// <summary>
+        /// Clears bindings if any
+        /// </summary>
+        /// <param name="control"></param>
         public void Finish(Control control)
         {
-
+            BindingOperations.ClearAllBindings(control);
         }
     }
 

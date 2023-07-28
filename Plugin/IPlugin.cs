@@ -21,7 +21,7 @@ namespace Examath.Core.Plugin
         /// <summary>
         /// A string that appears as the plugin's tooltip
         /// </summary>
-        public string Tooltip { get; }
+        public object Tooltip { get; }
 
         /// <summary>
         /// Method to call after this plugin is initialised.
@@ -31,27 +31,5 @@ namespace Examath.Core.Plugin
         /// </remarks>
         /// <param name="e">The <see cref="Env"/> to run in</param>
         public void Setup(Env e);
-    }
-
-    /// <summary>
-    /// Basic implementation of <see cref="IPlugin"/>
-    /// </summary>
-    public abstract class Plugin : IPlugin
-    {
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public virtual Color Colour { get; set; } = Color.FromRgb(0, 255, 0);
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public string Tooltip { get; set; } = "";
-
-        /// <inheritdoc/>
-        public virtual void Setup(Env e)
-        {
-
-        }
     }
 }

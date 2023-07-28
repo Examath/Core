@@ -110,7 +110,6 @@ namespace Examath.Core.Environment
         /// <param name="source">Source of binding</param>
         /// <param name="property">Property to bind</param>
         /// <param name="label">Optional label</param>
-        /// <param name="helpText">Optional help text</param>
         public TextBoxInput(object source, string property, string label = "")
             : base(source, property, label, TextBox.TextProperty)
         {

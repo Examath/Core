@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Examath.Core.Extensions
 {
+    /// <summary>
+    /// Useful extension methods
+    /// </summary>
     public static class Extensions
     {
         /// <summary>

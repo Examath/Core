@@ -72,6 +72,16 @@ namespace Examath.Core.Plugin
             set => SetProperty(ref _Colour, value);
         }
 
+        private object _Tooltip;
+        /// <summary>
+        /// Gets the tooltip of this plugin. This is set to <see cref="IPlugin.Tooltip"/> on etup
+        /// </summary>
+        public object Tooltip
+        {
+            get => _Tooltip;
+            set => SetProperty(ref _Tooltip, value);
+        }
+
         #endregion
 
         #region Constructor
@@ -134,6 +144,7 @@ namespace Examath.Core.Plugin
                 {
                     _Plugin.Setup(_Env);
                     Colour = _Plugin.Colour;
+                    Tooltip = _Plugin.Tooltip;
                 }
             }
             catch (Exception e)
@@ -180,6 +191,7 @@ namespace Examath.Core.Plugin
                         await executeAsync.Execute(_Env);
                     }
                     Colour = _Plugin.Colour;
+                    Tooltip = _Plugin.Tooltip;
                 }
             }
             catch (Exception e)
