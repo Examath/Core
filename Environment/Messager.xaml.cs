@@ -126,6 +126,9 @@ namespace Examath.Core.Environment
         /// <summary>
         /// Creates a new <see cref="Messager"/> dialog and shows it to the user.
         /// </summary>
+        /// <remarks>
+        /// Note that this returns <see cref="DialogResult.Yes"/> if either the Ok or Yes button is clicked.
+        /// </remarks>
         /// <param name="text">The content of the dialog</param>
         /// <param name="title">The title of the dialog window</param>
         /// <param name="messageStyle">The style of the message</param>

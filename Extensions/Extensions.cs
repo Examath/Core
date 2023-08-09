@@ -14,7 +14,7 @@ namespace Examath.Core.Extensions
         /// <summary>
         /// Checks whether this string is null or in the ASO format for null refrence
         /// </summary>
-        /// <param name="nullable">The string to check</param>
+        /// <param name="value">the string to check</param>
         /// <returns>True if <paramref name="value"/> parameter is either <see cref="string.IsNullOrEmpty(string?)"/>or is the string "null"</returns>
         public static bool IsASONull(this string value)
         {

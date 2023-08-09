@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Remove="Controls\ExceedableProgressBar - Copy.cs" />
     <Compile Remove="Controls\TextBoxButton.cs" />
+    <Compile Remove="Converters\IsTypeofConverter.cs" />
     <Compile Remove="Converters\StringStartsWithConverter.cs" />
     <Compile Remove="Environment\AskerInput.cs" />
     <Compile Remove="Environment\AskerOutput.cs" />
