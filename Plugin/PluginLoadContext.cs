@@ -12,6 +12,10 @@ namespace Examath.Core.Plugin
     {
         private readonly AssemblyDependencyResolver _Resolver;
 
+        /// <summary>
+        /// Create a new plugin load context
+        /// </summary>
+        /// <param name="pluginPath"></param>
         public PluginLoadContext(string pluginPath) : base(isCollectible: true)
         {
             _Resolver = new AssemblyDependencyResolver(pluginPath);
@@ -39,11 +43,15 @@ namespace Examath.Core.Plugin
             return IntPtr.Zero;
         }
     }
-    public class ShadowAssemblyLoadContext : AssemblyLoadContext
-    {
-        public ShadowAssemblyLoadContext() : base(isCollectible: true) { }
 
-        public Assembly LoadFromFilePath(string path)
+    /// <summary>
+    /// Represents a load context that loads plugin into memory
+    /// </summary>
+    internal class ShadowAssemblyLoadContext : AssemblyLoadContext
+    {
+        internal ShadowAssemblyLoadContext() : base(isCollectible: true) { }
+
+        internal Assembly LoadFromFilePath(string path)
         {
             using var stream = new FileStream(path, FileMode.Open);
             return LoadFromStream(stream);
