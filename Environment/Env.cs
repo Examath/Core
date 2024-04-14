@@ -10,7 +10,7 @@ namespace Examath.Core.Environment
     /// </summary>
     /// <remarks>
     /// This includes:
-    /// <list type="bullet">
+    /// <list style="bullet">
     ///     <item>A console <see cref="Output"/>, a rich text document</item>
     ///     <item>A command to <see cref="Clear"/> the console</item>
     ///     <item><see cref="object"/> <see cref="Model"/> for data</item>
@@ -56,22 +56,25 @@ namespace Examath.Core.Environment
         }
 
         /// <summary>
-        /// Static variable that may be used to access an <see cref="Env"/> indirectly.
+        /// An <see cref="Env"/> singleton.
         /// </summary>
-        /// <remarks>
-        /// This must be set to a new instance at application start before using.
-        /// </remarks>
-        public static Env? Default { get; set; }
+        public static Env Default { get; set; } = new Env();
 
         #endregion
 
         #region Console Proeprties
 
         /// <summary>
-        /// The output of this console
+        /// Gets or sets output of this console
         /// </summary>
         public FlowDocument Output { get; set; } = new();
 
+        /// <summary>
+        /// Gets or sets the maximum number of blocks allowed in the console.
+        /// </summary>
+        /// <remarks>
+        /// If the number of bocks exceed this when a new block is added, then the first block will be removed.
+        /// </remarks>
         public int ConsoleEntriesMaxLength { get; set; } = 1000;
 
         #endregion
@@ -129,23 +132,24 @@ namespace Examath.Core.Environment
         #region Output
 
         /// <summary>
-        /// Outputs a <see cref="Block"/> to this enviorment console. For custom-formatted messages
+        /// Outputs a <see cref="Block"/> to this environment console. For custom-formatted messages
         /// </summary>
         /// <remarks>
         /// Use <see cref="Out(object, ConsoleStyle)"/> if formatting is not needed.
         /// If the block already exists inside <see cref="Output"/>, then it's moved to last.
         /// </remarks>
         /// <param name="block">The section to output</param>
-        /// <param name="type">The type of message, similar to Out()</param>
-        public override void OutBlock(Block block, ConsoleStyle type = ConsoleStyle.Unset, string tooltip = "")
+        /// <param name="style">The style of message</param>
+        /// <param name="tooltip">An optional tooltip fot the block. By default the timestamp is added.</param>
+        public override void OutBlock(Block block, ConsoleStyle style = ConsoleStyle.Unset, string tooltip = "")
         {
             // Standard Tooltip
-            base.OutBlock(block, type, tooltip);
+            base.OutBlock(block, style, tooltip);
 
-            // Format Paragraph to required type
-            if (type != ConsoleStyle.Unset)
+            // Format Paragraph to required style
+            if (style != ConsoleStyle.Unset)
             {
-                block.Style = (Style)Output.Resources[type.ToString()];
+                block.Style = (Style)Output.Resources[style.ToString()];
             }
 
             // Allow for blocks to be updated and 'pushed' back down
@@ -164,14 +168,22 @@ namespace Examath.Core.Environment
 
             Output.Blocks.Add(block);
 
+            // Raise event
+            BlockOutputted?.Invoke(this, EventArgs.Empty);
+
             // Scroll
             Output.Dispatcher.InvokeAsync(() => block.BringIntoView(), System.Windows.Threading.DispatcherPriority.Background);
         }
 
-        public override void Out(object message, ConsoleStyle type = ConsoleStyle.Unset)
+        /// <summary>
+        /// Outputs a string to this environment console.
+        /// </summary>
+        /// <param name="message">The string to print to the console</param>
+        /// <param name="style">The style of message</param>
+        public override void Out(object message, ConsoleStyle style = ConsoleStyle.Unset)
         {
             Section section = new(new Paragraph(new Run(message.ToString())));
-            OutBlock(section, type);
+            OutBlock(section, style);
         }
 
         /// <summary>
@@ -185,6 +197,15 @@ namespace Examath.Core.Environment
             OutBlock(log.Output);
             return log;
         }
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when a new block is outputted to the console.
+        /// </summary>
+        public event EventHandler? BlockOutputted;
 
         #endregion
     }

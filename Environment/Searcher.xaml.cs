@@ -7,11 +7,14 @@ using System.Windows.Data;
 namespace Examath.Core.Environment
 {
     /// <summary>
-    /// Interaction logic for Searcher.xaml
+    /// A dialog that allows the selection of an item from a pickable list
     /// </summary>
+    /// <remarks>
+    /// Use the static method <see cref="Select(IList, string)"/>
+    /// </remarks>
     public partial class Searcher : Window
     {
-        private readonly CollectionViewSource ViewSource;
+        private readonly CollectionViewSource _ViewSource;
 
         /// <summary>
         /// Gets or sets whether this dialog supports multiple selections
@@ -37,8 +40,8 @@ namespace Examath.Core.Environment
         public Searcher()
         {
             InitializeComponent();
-            ViewSource = ((CollectionViewSource)this.FindResource("Source"));
-            ViewSource.Filter += ViewSource_Filter;
+            _ViewSource = ((CollectionViewSource)this.FindResource("Source"));
+            _ViewSource.Filter += ViewSource_Filter;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -109,6 +112,11 @@ namespace Examath.Core.Environment
             {
                 return null;
             }
+        }
+
+        private void Window_SourceInitialized(object sender, System.EventArgs e)
+        {
+            Utils.WindowPosition.MoveToMouseCursor(this);
         }
     }
 }

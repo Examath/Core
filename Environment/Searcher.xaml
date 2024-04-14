@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Searcher" MinWidth="200" Width="300" MaxWidth="600" MinHeight="100" Height="300" MaxHeight="600" WindowStyle="ToolWindow"
         Topmost="True"
+        SourceInitialized="Window_SourceInitialized"
         Style="{StaticResource ContrastWindowStyle}" d:DataContext="{d:SampleData ItemCount=8}" Loaded="Window_Loaded">
     <Window.Resources>
         <CollectionViewSource Source="{Binding}" x:Key="Source" IsLiveFilteringRequested="True" IsLiveSortingRequested="True">
@@ -21,6 +22,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" />
+        <TextBlock VerticalAlignment="Center" Foreground="{StaticResource ForegroundMinorColourKey}" HorizontalAlignment="Right" Margin="0,0,8,0"><Run Style="{StaticResource Glyph}">&#xE721;</Run></TextBlock>
         <ListBox x:Name="View" Grid.Row="2" Style="{StaticResource ContrastListBoxStyle}" 
                  ItemsSource="{Binding Source={StaticResource Source}}" SelectionChanged="View_SelectionChanged">
             

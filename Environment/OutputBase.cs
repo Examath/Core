@@ -23,8 +23,8 @@ namespace Examath.Core.Environment
         /// Use <see cref="Out(string, ConsoleStyle)"/> if formatting is not needed.
         /// </remarks>
         /// <param name="block">The paragraph to output</param>
-        /// <param name="type">The type of message, similar to Out()</param>
-        public virtual void OutBlock(Block block, ConsoleStyle type = ConsoleStyle.Unset, string tooltip = "")
+        /// <param name="style">The style of message, similar to Out()</param>
+        public virtual void OutBlock(Block block, ConsoleStyle style = ConsoleStyle.Unset, string tooltip = "")
         {
             // Tooltip / DateStamp
             ToolTip toolTipElement = new();
@@ -43,8 +43,8 @@ namespace Examath.Core.Environment
         /// Use <see cref="OutBlock(Block, ConsoleStyle, string)"/> if custom or dynamic content is needed.
         /// </remarks>
         /// <param name="message">The message to output</param>
-        /// <param name="type">The type of message</param>
-        public abstract void Out(object message, ConsoleStyle type = ConsoleStyle.Unset);
+        /// <param name="style">The style of message</param>
+        public abstract void Out(object message, ConsoleStyle style = ConsoleStyle.Unset);
 
         /// <summary>
         /// Outputs a ASO standard exception occurred message.
