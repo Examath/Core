@@ -5,9 +5,25 @@
     <!--#region Generic -->
 
     <ControlTemplate x:Key="ContrastErrorTemplate">
-        <Border BorderBrush="{DynamicResource FormatColourKey}" BorderThickness="0 0 0 2">
-            <AdornedElementPlaceholder x:Name="controlWithError"/>
-        </Border>
+        <StackPanel x:Name="root">            
+            <Border BorderBrush="{DynamicResource FormatColourKey}" BorderThickness="0 0 0 2" HorizontalAlignment="Left">
+                <AdornedElementPlaceholder x:Name="controlWithError"/>
+            </Border>
+            <ItemsControl x:Name="list"
+                          Background="{DynamicResource FormatColourKey}" Padding="2" Opacity="0.05"
+                          ItemsSource="{Binding ElementName=controlWithError, Path=AdornedElement.(Validation.Errors)}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ErrorContent}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+        <ControlTemplate.Triggers>
+            <Trigger SourceName="root" Property="IsMouseOver" Value="True">
+                <Setter TargetName="list" Property="Opacity" Value="1"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style x:Key="ContrastUnsizedControlStyle" TargetType="Control">
@@ -292,10 +308,6 @@
                         </Setter.Value>
                     </Setter>
                 </Trigger.Setters>
-            </Trigger>
-            <Trigger Property="Validation.HasError" Value="True">
-                <!-- From https://kmatyaszek.github.io/wpf%20validation/2019/03/04/wpf-validation-display-errors-to-the-user.html -->
-                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
             </Trigger>
         </Style.Triggers>
     </Style>

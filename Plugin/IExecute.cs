@@ -12,6 +12,10 @@ namespace Examath.Core.Plugin
     /// </summary>
     public interface IExecute
     {
+        /// <summary>
+        /// Execute the plugin code
+        /// </summary>
+        /// <param name="e">The environment to execute on</param>
         void Execute(Env e);
     }
 
@@ -20,6 +24,10 @@ namespace Examath.Core.Plugin
     /// </summary>
     public interface IExecuteAsync
     {
+        /// <summary>
+        /// Execute the plugin code asynchronously
+        /// </summary>
+        /// <param name="e">The environment to execute on</param>
         Task Execute(Env e);
     }
 }

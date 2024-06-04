@@ -6,7 +6,8 @@ using static System.Net.Mime.MediaTypeNames;
 namespace Examath.Core.Environment
 {
     /// <summary>
-    /// Interaction logic for Message.xaml
+    /// Represents a simple dialog box, with optional yes/no/cancel.
+    /// You may Messager.Out to show the dialog.
     /// </summary>
     public partial class Messager : Window
     {
