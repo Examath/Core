@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace Examath.Core.Model
     /// Represents a ViewModel that can be loaded from and saved to an XML file of type <typeparamref name="T"/>
     /// </summary>
     /// <typeparam name="T">The type of model</typeparam>
-    public abstract class XMLFileObject<T> : FileManipulationObject
+    public abstract class XMLFileObject<T> : FileManipulationObject where T : ObservableObject
     {
         /// <summary>
         /// <inheritdoc/>
@@ -43,13 +44,31 @@ namespace Examath.Core.Model
         public T? Data
         {
             get => _Data;
-            set { if (SetProperty(ref _Data, value)) InitialiseData(); }
+            set 
+            { 
+                if (_Data != null) _Data.PropertyChanged -= Data_PropertyChanged;
+                if (SetProperty(ref _Data, value)) 
+                {
+                    InitialiseData();
+					if (_Data != null) _Data.PropertyChanged += Data_PropertyChanged;
+                }
+            }
         }
 
         /// <summary>
-        /// Called when <see cref="Data"/> is changed
+        /// Called when Data.PropertyChanged called
         /// </summary>
-        public virtual void InitialiseData()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+		protected virtual void Data_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+		{
+			NotifyChange(sender, e);
+		}
+
+		/// <summary>
+		/// Called when <see cref="Data"/> is changed
+		/// </summary>
+		public virtual void InitialiseData()
         {
 
         }
