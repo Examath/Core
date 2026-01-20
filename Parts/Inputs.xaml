@@ -56,11 +56,30 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="ContrastInputBoxStyle" TargetType="Control" BasedOn="{StaticResource ContrastControlStyle}">
+    <Style x:Key="ContrastInputBoxStyle" TargetType="Control">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundColourKey}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundColourKey}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BasegroundColourKey}"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ContrastFocusVisualStyle}" />
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ContrastErrorTemplate}"/>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="Margin" Value="2" />
         <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="{DynamicResource DisabledOpacityKey}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="Padding" Value="2" />
+            </Trigger>
+            <Trigger Property="IsMouseCaptured" Value="True">
+                <Setter Property="BorderThickness" Value="4" />
+                <Setter Property="Padding" Value="0" />
+            </Trigger>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="Background" Value="{DynamicResource ForegroundColourKey}" />
-                <Setter Property="Foreground" Value="{DynamicResource BackgroundColourKey}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MetaForegroundColourKey}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
