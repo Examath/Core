@@ -82,9 +82,37 @@ namespace Examath.Core.Model
             }
         }
 
-        /// <summary>
-        /// Returns the file filter for all files (<c>*.*</c>)
-        /// </summary>
-        public static readonly FileFilter All = new("All files", false, "*.*");
-    }
+		/// <summary>
+		/// Joins the specified file filters into a single string.
+		/// </summary>
+		/// <param name="fileFilters">The list of <see cref="FileFilter"/>s to combine</param>
+		/// <returns>A string of extensions  in the format expected by 
+        /// the <see cref="System.Windows.Forms.FileDialog"/></returns>
+		public static string Join(params FileFilter[] fileFilters)
+		{
+			List<FileFilter> filtersList = new();
+			filtersList.AddRange(fileFilters);
+			return String.Join("|", filtersList);
+		}
+
+		/// <summary>
+		/// Returns the file filter for all files (<c>*.*</c>)
+		/// </summary>
+		public static readonly FileFilter All = new("All files", false, "*.*");
+
+		/// <summary>
+		/// Returns the file filter for text files (<c>*.txt</c>)
+		/// </summary>
+		public static readonly FileFilter Text = new("Text files", false, "*.txt");
+
+		/// <summary>
+		/// Returns the file filter for xml files (<c>*.xml</c>)
+		/// </summary>
+		public static readonly FileFilter Xml = new("All files", false, "*.*");
+
+		/// <summary>
+		/// Image formats supported by <see cref="System.Drawing.Bitmap"/>
+		/// </summary>
+		public static readonly FileFilter WpfImages = new("Image files", "*.png", "*.jpg", "*.jpeg", "*.bmp", "*.gif", "*.exif");
+	}
 }
