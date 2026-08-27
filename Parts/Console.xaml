@@ -71,4 +71,7 @@
     <Style TargetType="Block" x:Key="ErrorBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
         <Setter Property="Background" Value="{StaticResource ErrorColourKey}"/>
     </Style>
+    <Style TargetType="Block" x:Key="MetaBlockStyle" BasedOn="{StaticResource NormalBlockStyle}">
+        <Setter Property="Background" Value="{StaticResource MetaPanelColourKey}"/>
+    </Style>
 </ResourceDictionary>

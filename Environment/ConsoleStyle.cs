@@ -18,6 +18,7 @@ namespace Examath.Core.Environment
         TimeBlockStyle,
         FormatBlockStyle,
         WarningBlockStyle,
-        ErrorBlockStyle
+        ErrorBlockStyle,
+        MetaBlockStyle,
     }
 }

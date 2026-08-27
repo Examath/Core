@@ -12,19 +12,37 @@
                                 <ColumnDefinition Width="19"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" Stroke="{DynamicResource BasegroundColourKey}" SnapsToDevicePixels="false" StrokeThickness="2" VerticalAlignment="Center"/>
+                            <Path x:Name="arrow" Data="M 0,0 L 5,5 L 10,0" HorizontalAlignment="Center"  VerticalAlignment="Center"
+                                  Stroke="{DynamicResource BasegroundColourKey}" SnapsToDevicePixels="false" StrokeThickness="2">
+                                <Path.LayoutTransform>
+                                    <RotateTransform x:Name="rt" Angle="0"/>
+                                </Path.LayoutTransform>
+                            </Path>
                             <ContentPresenter Grid.Column="1" HorizontalAlignment="Left" Margin="4,0,0,0" RecognizesAccessKey="True" SnapsToDevicePixels="True" VerticalAlignment="Center"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="true">
-                            <Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="rt" Storyboard.TargetProperty="Angle" To="180" Duration="0:0:0.15" AccelerationRatio="0.2" DecelerationRatio="0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="rt" Storyboard.TargetProperty="Angle" To="0" Duration="0:0:0.15" AccelerationRatio="0.2" DecelerationRatio="0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Stroke" TargetName="arrow" Value="{DynamicResource ForegroundColourKey}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter Property="StrokeThickness" TargetName="arrow" Value="4"/>
+                            <Setter Property="StrokeThickness" TargetName="arrow" Value="1"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -41,30 +59,37 @@
                                 <ColumnDefinition Width="19"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid>
-                                <Grid.LayoutTransform>
-                                    <TransformGroup>
-                                        <TransformGroup.Children>
-                                            <TransformCollection>
-                                                <RotateTransform Angle="180"/>
-                                            </TransformCollection>
-                                        </TransformGroup.Children>
-                                    </TransformGroup>
-                                </Grid.LayoutTransform>
-                                <Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" Stroke="{DynamicResource BasegroundColourKey}" SnapsToDevicePixels="false" StrokeThickness="2" VerticalAlignment="Center"/>
-                            </Grid>
+                            <Path x:Name="arrow" Data="M 0,0 L 5,5 L 10,0" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
+                                      Stroke="{DynamicResource BasegroundColourKey}" StrokeThickness="2">
+                                <Path.LayoutTransform>
+                                    <RotateTransform x:Name="rt" Angle="180"/>
+                                </Path.LayoutTransform>
+                            </Path>
                             <ContentPresenter Grid.Column="1" HorizontalAlignment="Left" Margin="4,0,0,0" RecognizesAccessKey="True" SnapsToDevicePixels="True" VerticalAlignment="Center"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="true">
-                            <Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="rt" Storyboard.TargetProperty="Angle" To="0" Duration="0:0:0.15" AccelerationRatio="0.2" DecelerationRatio="0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="rt" Storyboard.TargetProperty="Angle" To="180" Duration="0:0:0.15" AccelerationRatio="0.2" DecelerationRatio="0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Stroke" TargetName="arrow" Value="{DynamicResource ForegroundColourKey}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter Property="StrokeThickness" TargetName="arrow" Value="4"/>
+                            <Setter Property="StrokeThickness" TargetName="arrow" Value="1"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -81,30 +106,37 @@
                                 <RowDefinition Height="19"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid>
-                                <Grid.LayoutTransform>
-                                    <TransformGroup>
-                                        <TransformGroup.Children>
-                                            <TransformCollection>
-                                                <RotateTransform Angle="90"/>
-                                            </TransformCollection>
-                                        </TransformGroup.Children>
-                                    </TransformGroup>
-                                </Grid.LayoutTransform>
-                                <Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" Stroke="{DynamicResource BasegroundColourKey}"  SnapsToDevicePixels="false" StrokeThickness="2" VerticalAlignment="Center"/>
-                            </Grid>
+                            <Path x:Name="arrow" Data="M 0,0 L 5,5 L 10,0" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
+                                      Stroke="{DynamicResource BasegroundColourKey}" StrokeThickness="2">
+                                <Path.LayoutTransform>
+                                    <RotateTransform x:Name="rt" Angle="90"/>
+                                </Path.LayoutTransform>
+                            </Path>
                             <ContentPresenter HorizontalAlignment="Center" Margin="0,4,0,0" RecognizesAccessKey="True" Grid.Row="1" SnapsToDevicePixels="True" VerticalAlignment="Top"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="true">
-                            <Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="rt" Storyboard.TargetProperty="Angle" To="270" Duration="0:0:0.15" AccelerationRatio="0.2" DecelerationRatio="0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="rt" Storyboard.TargetProperty="Angle" To="90" Duration="0:0:0.15" AccelerationRatio="0.2" DecelerationRatio="0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Stroke" TargetName="arrow" Value="{DynamicResource ForegroundColourKey}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter Property="StrokeThickness" TargetName="arrow" Value="4"/>
+                            <Setter Property="StrokeThickness" TargetName="arrow" Value="1"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -121,30 +153,37 @@
                                 <RowDefinition Height="19"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid>
-                                <Grid.LayoutTransform>
-                                    <TransformGroup>
-                                        <TransformGroup.Children>
-                                            <TransformCollection>
-                                                <RotateTransform Angle="-90"/>
-                                            </TransformCollection>
-                                        </TransformGroup.Children>
-                                    </TransformGroup>
-                                </Grid.LayoutTransform>
-                                <Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" Stroke="{DynamicResource BasegroundColourKey}" SnapsToDevicePixels="false" StrokeThickness="2" VerticalAlignment="Center"/>
-                            </Grid>
+                            <Path x:Name="arrow" Data="M 0,0 L 5,5 L 10,0" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
+                                      Stroke="{DynamicResource BasegroundColourKey}" StrokeThickness="2">
+                                <Path.LayoutTransform>
+                                    <RotateTransform x:Name="rt" Angle="270"/>
+                                </Path.LayoutTransform>
+                            </Path>
                             <ContentPresenter HorizontalAlignment="Center" Margin="0,4,0,0" RecognizesAccessKey="True" Grid.Row="1" SnapsToDevicePixels="True" VerticalAlignment="Top"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="true">
-                            <Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="rt" Storyboard.TargetProperty="Angle" To="90" Duration="0:0:0.15" AccelerationRatio="0.2" DecelerationRatio="0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="rt" Storyboard.TargetProperty="Angle" To="270" Duration="0:0:0.15" AccelerationRatio="0.2" DecelerationRatio="0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Stroke" TargetName="arrow" Value="{DynamicResource ForegroundColourKey}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter Property="StrokeThickness" TargetName="arrow" Value="4"/>
+                            <Setter Property="StrokeThickness" TargetName="arrow" Value="1"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -164,10 +203,11 @@
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
                         <DockPanel>
                             <ToggleButton x:Name="HeaderSite" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}"
+                                          
                                           ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" DockPanel.Dock="Top"
                                           FontStretch="{TemplateBinding FontStretch}" Foreground="{TemplateBinding Foreground}"
                                           FocusVisualStyle="{DynamicResource ContrastFocusVisualStyle}" FontStyle="{TemplateBinding FontStyle}"
-                                          FontFamily="{TemplateBinding FontFamily}" FontWeight="{TemplateBinding FontWeight}" FontSize="{TemplateBinding FontSize}"
+                                          FontFamily="{TemplateBinding FontFamily}" FontWeight="DemiBold" FontSize="{TemplateBinding FontSize}"
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                           Margin="1" Padding="{TemplateBinding Padding}" Style="{StaticResource ExpanderDownHeaderStyle}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
                             <ContentPresenter x:Name="ExpandSite" DockPanel.Dock="Bottom" Focusable="false" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Visibility="Collapsed"/>
@@ -238,9 +278,10 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Border Grid.Row="0" Background="{DynamicResource PanelFaintColourKey}">
-                            <ContentPresenter Margin="6 2"
+                            <ContentPresenter Margin="6 4"
                               ContentSource="Header"
-                              RecognizesAccessKey="True" />
+                              RecognizesAccessKey="True"
+                              TextBlock.FontWeight="DemiBold"/>
                         </Border>
 
                         <Border Grid.Row="1" Background="{TemplateBinding Background}">
