@@ -20,6 +20,7 @@
     <SolidColorBrush x:Key="DialogBackgroundColourKey" Color="#222222" />
     <SolidColorBrush x:Key="OverlayBackgroundColourKey" Color="#C0000000" />
 
+    <Color x:Key="ThemePanelColour">#66646464</Color>
     <SolidColorBrush x:Key="PanelColourKey" Color="#66646464" />
     <SolidColorBrush x:Key="Panel2ColourKey" Color="#404040" />
     <SolidColorBrush x:Key="PanelFaintColourKey" Color="#33646464" />
@@ -210,18 +211,20 @@
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
-        <Setter Property="Background" Value="{DynamicResource PanelColourKey}"/>
         <Setter Property="Width" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
         <Setter Property="MinWidth" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Grid x:Name="Bg" SnapsToDevicePixels="true" Background="{TemplateBinding Background}">
+                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
                         <Grid.RowDefinitions>
                             <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                             <RowDefinition Height="1*"/>
                             <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                         </Grid.RowDefinitions>
+                        <Grid.Background>
+                            <SolidColorBrush x:Name="Bgc" Color="#00000000"/>
+                        </Grid.Background>
                         <RepeatButton x:Name="PART_LineUpButton" Command="{x:Static ScrollBar.LineUpCommand}" IsEnabled="{TemplateBinding IsMouseOver}" Style="{StaticResource ScrollBarButton}">
                             <Path x:Name="ArrowTop" Data="M 0,4 C0,4 0,6 0,6 0,6 3.5,2.5 3.5,2.5 3.5,2.5 7,6 7,6 7,6 7,4 7,4 7,4 3.5,0.5 3.5,0.5 3.5,0.5 0,4 0,4 z" Fill="{DynamicResource ForegroundColourKey}" Margin="3,4,3,3" Stretch="Uniform"/>
                         </RepeatButton>
@@ -240,6 +243,32 @@
                             <Path x:Name="ArrowBottom" Data="M 0,2.5 C0,2.5 0,0.5 0,0.5 0,0.5 3.5,4 3.5,4 3.5,4 7,0.5 7,0.5 7,0.5 7,2.5 7,2.5 7,2.5 3.5,6 3.5,6 3.5,6 0,2.5 0,2.5 z" Fill="{DynamicResource ForegroundColourKey}" Margin="3,4,3,3" Stretch="Uniform"/>
                         </RepeatButton>
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Bgc" Storyboard.TargetProperty="Color" To="{StaticResource ThemePanelColour}" Duration="0:0:0.2">
+                                            <ColorAnimation.EasingFunction>
+                                                <CircleEase EasingMode="EaseOut"/>
+                                            </ColorAnimation.EasingFunction>
+                                        </ColorAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Bgc" Storyboard.TargetProperty="Color" To="#00646464" Duration="0:0:0.8">
+                                            <ColorAnimation.EasingFunction>
+                                                <CircleEase EasingMode="EaseOut"/>
+                                            </ColorAnimation.EasingFunction>
+                                        </ColorAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -252,7 +281,10 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ScrollBar}">
-                            <Grid x:Name="Bg" SnapsToDevicePixels="true" Background="{TemplateBinding Background}">
+                            <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                <Grid.Background>
+                                    <SolidColorBrush x:Name="Bgc" Color="#00646464"/>
+                                </Grid.Background>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}"/>
                                     <ColumnDefinition Width="0.00001*"/>
@@ -276,6 +308,32 @@
                                     <Path x:Name="ArrowRight" Data="M 1.81,7 C1.81,7 0,7 0,7 0,7 3.18,3.5 3.18,3.5 3.18,3.5 0,0 0,0 0,0 1.81,0 1.81,0 1.81,0 5,3.5 5,3.5 5,3.5 1.81,7 1.81,7 z" Fill="{StaticResource ForegroundColourKey}" Margin="3" Stretch="Uniform"/>
                                 </RepeatButton>
                             </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetName="Bgc" Storyboard.TargetProperty="Color" To="{StaticResource ThemePanelColour}" Duration="0:0:0.2">
+                                                    <ColorAnimation.EasingFunction>
+                                                        <CircleEase EasingMode="EaseOut"/>
+                                                    </ColorAnimation.EasingFunction>
+                                                </ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetName="Bgc" Storyboard.TargetProperty="Color" To="#00646464" Duration="0:0:0.8">
+                                                    <ColorAnimation.EasingFunction>
+                                                        <CircleEase EasingMode="EaseOut"/>
+                                                    </ColorAnimation.EasingFunction>
+                                                </ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -329,9 +387,10 @@
         <Setter Property="Height" Value="16"/>
         <Setter Property="MinWidth" Value="16"/>
         <Setter Property="Margin" Value="2"/>
-        <Setter Property="Padding" Value="0 -2 0 0"/>
+        <Setter Property="Padding" Value="0 -1.5 0 0"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Label">

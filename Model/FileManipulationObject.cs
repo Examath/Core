@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Examath.Core.Environment;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -97,20 +98,21 @@ namespace Examath.Core.Model
         /// </summary>
         public abstract Task SaveFileAsync();
 
-        #endregion
+		#endregion
 
-        #region Open & Load
+		#region Open & Load
 
-        /// <summary>
-        /// Attempts to synchronously <see cref="LoadFileAsync"/> this object from the file at <see cref="FileLocation"/>. This method may throw exceptions.
-        /// </summary>
-        /// <remarks>
-        /// Call for autoloading at application startup
-        /// </remarks>
-        /// <returns>
-        /// True if file exists and is isLoaded without error, and false otherwise.
-        /// </returns>
-        public bool TryLoad()
+		/// <summary>
+		/// Attempts to synchronously <see cref="LoadFileAsync"/> this object from the file at <see cref="FileLocation"/>. This method may throw exceptions.
+		/// </summary>
+		/// <remarks>
+		/// Call for autoloading at application startup
+		/// No dialogs are created to inform the user if this works or fails, use <see cref="Open"/> if some user control is required.
+		/// </remarks>
+		/// <returns>
+		/// True if file exists and is isLoaded without error, and false otherwise.
+		/// </returns>
+		public bool TryLoad()
         {
             if (File.Exists(FileLocation))
             {
@@ -132,10 +134,11 @@ namespace Examath.Core.Model
         }
 
         /// <summary>
-        /// Opens a <see cref=" Microsoft.Win32.OpenFileDialog"/> and attempts to load the user-selected file asynchronously inside a try-catch loop.
+        /// Opens a <see cref=" Microsoft.Win32.OpenFileDialog"/> and attempts to load the user-selected file asynchronously inside a try-catch block.
         /// </summary>
         /// <remarks>
-        /// Checks if <see cref="IsUserReadyToPartWithCurrentFile"/> before executing. Also sets <see cref="FileLocation"/> to the result of the dialog.
+        /// Checks if <see cref="IsUserReadyToPartWithCurrentFile"/> before executing. 
+        /// Also sets <see cref="FileLocation"/> to the result of the dialog if succesfully loaded.
         /// </remarks>
         [RelayCommand]
         public async Task Open()
@@ -156,6 +159,7 @@ namespace Examath.Core.Model
             if (result == true)
             {
                 // Open document
+                string? oldFileLocation = FileLocation;
                 FileLocation = dialog.FileName;
                 try
                 {
@@ -165,15 +169,47 @@ namespace Examath.Core.Model
                 catch (Exception e)
                 {
                     OnLoadError(e);
+                    FileLocation = oldFileLocation;
                 }
             }
         }
 
-        /// <summary>
-        /// Repeatedly prompts the user till a valid existing file is opened 
-        /// or a new file is made, setting 
-        /// </summary>
-        public async Task CreateOrOpen()
+		/// <summary>
+		/// Attempts to load the file <paramref name="newFileLocation"/> asynchronously inside a try-catch block.
+		/// </summary>
+		/// <remarks>
+		/// Checks if <see cref="IsUserReadyToPartWithCurrentFile"/> before executing. 
+        /// Also sets <see cref="FileLocation"/> if successful.
+		/// </remarks>
+        /// <param name="newFileLocation">The specified new file location</param>
+        /// <param name="checkIfUserReadyToPartWithCurrentFile">Whether to check if the user want to save any unsaved changes</param>
+		public async Task Open(string newFileLocation, bool checkIfUserReadyToPartWithCurrentFile = false)
+		{
+			if (checkIfUserReadyToPartWithCurrentFile && !await IsUserReadyToPartWithCurrentFile()) return;
+
+			// Open document
+			string? oldFileLocation = FileLocation;
+			FileLocation = newFileLocation;
+			try
+			{
+				ResetNotifyChanges("");
+				await LoadFileAsync();
+			}
+			catch (Exception e)
+			{
+				OnLoadError(e);
+				FileLocation = oldFileLocation;
+			}
+		}
+
+		/// <summary>
+		/// Repeatedly prompts the user till a valid existing file is opened 
+		/// or a new file is made, setting 
+		/// </summary>
+		/// <remarks>
+		/// Use <see cref="TryLoad"/>, <see cref="Open"/> where possible for friendlier user experience.
+		/// </remarks>
+		public async Task CreateOrOpen()
         {
             bool isLoaded = false;
 
@@ -224,7 +260,7 @@ namespace Examath.Core.Model
         }
 
         /// <summary>
-        /// Shows a <see cref="MessageBox"/> for error <paramref name="e"/>. Override for custom prompt.
+        /// Shows a <see cref="Messager"/> for error <paramref name="e"/>. Override for custom prompt.
         /// </summary>
         /// <param name="e">The error to display</param>
         protected virtual void OnLoadError(Exception e)
@@ -257,7 +293,7 @@ namespace Examath.Core.Model
 
         private string _LastChangeDescription = "Loaded";
         /// <summary>
-        /// Gets or sets 
+        /// Gets a string showing what the last modification was, and how many unsaved changes there are
         /// </summary>
         public string LastChangeDescription
         {
@@ -293,13 +329,43 @@ namespace Examath.Core.Model
             SaveCommand.NotifyCanExecuteChanged();
         }
 
-        /// <summary>
-        /// If this file <see cref="IsModified"/>, a <see cref="ShowUnsavedChangesPrompt"/>
-        /// is shown and if the user intends to save, either the <see cref="Save"/> 
-        /// or <see cref="SaveAs"/> commands are called.
-        /// </summary>
-        /// <returns>False if user intends to cancel their command</returns>
-        public async Task<bool> IsUserReadyToPartWithCurrentFile()
+		/// <summary>
+		/// If this file <see cref="IsModified"/>, a <see cref="ShowUnsavedChangesPrompt"/>
+		/// is shown and if the user intends to save, either the <see cref="Save"/> 
+		/// or <see cref="SaveAs"/> commands are called. 
+		/// </summary>
+		/// <example>
+		/// Implement in MainWindow.xaml.cs by:
+		/// <code> 		
+		/// #region Closing
+		/// private bool _IsReadyToClose = false;
+		/// 
+		/// protected override async void OnClosing(CancelEventArgs e)
+		/// {
+		/// 	// Avoid Refire
+		/// 	if (_IsReadyToClose) return;
+		/// 	base.OnClosing(e);
+		/// 
+		/// 	// If dirty
+		/// 	if (_VM != null &amp;&amp; _VM.IsModified)
+		/// 	{
+		/// 		// Temp cancel Closing
+		/// 		e.Cancel = true;
+		/// 
+		/// 		if (await _VM.IsUserReadyToPartWithCurrentFile())
+		/// 		{
+		/// 			// Restart closing
+		/// 			_IsReadyToClose = true;
+		/// 			Application.Current.Shutdown();
+		/// 		}
+		/// 	}
+		/// }
+		/// 
+		/// #endregion
+		/// </code>
+		/// </example>
+		/// <returns>False if user intends to cancel their command</returns>
+		public async Task<bool> IsUserReadyToPartWithCurrentFile()
         {
             if (IsModified)
             {

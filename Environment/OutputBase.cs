@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
@@ -53,12 +54,19 @@ namespace Examath.Core.Environment
         /// Use this to notify the user that an exception has been caught by a try-catch statement.
         /// Outputs the provided <see cref="Exception.Message"/>,
         /// <see cref="Exception.Source"/> and <see cref="Exception.TargetSite"/>.
+        /// This function is thread safe.
         /// </remarks>
         /// <param name="e">The exception that was caught</param>
         /// <param name="context">Provide a simplified description of where this error was caught.</param>
         public void OutException(Exception e, string context = "Unknown exception")
         {
-            Paragraph Message = new(new Run(DateTime.Now.ToString() + ": "));
+			if (!Application.Current.Dispatcher.CheckAccess())
+			{
+				Application.Current.Dispatcher.Invoke(() => OutException(e, context));
+				return;
+			}
+
+			Paragraph Message = new(new Run(DateTime.Now.ToString() + ": "));
             Message.Inlines.Add(new Bold(new Run(context + '\n')));
             Message.Inlines.Add(new Run(e.Message));
             Message.Inlines.Add(new Italic(new Run($"\n@ {e.Source} > {e.TargetSite}")));
