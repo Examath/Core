@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AutoForm\**" />
+    <EmbeddedResource Remove="AutoForm\**" />
+    <None Remove="AutoForm\**" />
+    <Page Remove="AutoForm\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Controls\ExceedableProgressBar - Copy.cs" />
     <Compile Remove="Controls\TextBoxButton.cs" />
     <Compile Remove="Converters\IsTypeofConverter.cs" />
