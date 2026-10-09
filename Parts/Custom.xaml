@@ -81,6 +81,7 @@
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Background}"/>
                             <Setter TargetName="PART_TextBlock" Property="Foreground" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Foreground}"/>
+                            <Setter TargetName="PART_TextBlock" Property="Text" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TrueText}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

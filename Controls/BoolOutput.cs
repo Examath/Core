@@ -62,27 +62,27 @@ namespace Examath.Core.Controls
 
         #endregion
 
-        //#region FalseText
-        ///// <summary>
-        ///// Gets or sets the text displayed when <see cref="IsChecked"/> is false.
-        ///// </summary>
-        ///// <remarks>
-        ///// If <see cref="FalseText"/> is null then <see cref="Text"/> is displayed always.
-        ///// </remarks>
-        //public string? FalseText
-        //{
-        //    get { return (string?)GetValue(FalseTextProperty); }
-        //    set { SetValue(FalseTextProperty, value); }
-        //}
+        #region TrueText
+        /// <summary>
+        /// Gets or sets the text displayed when <see cref="IsChecked"/> is false.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="TrueText"/> is null then <see cref="Text"/> is displayed always.
+        /// </remarks>
+        public string? TrueText
+        {
+            get { return (string?)GetValue(TrueTextProperty) ?? Text; }
+            set { SetValue(TrueTextProperty, value); }
+        }
 
-        //// Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...Text
-        ///// <summary>
-        ///// Backing property for <see cref="FalseText"/>: <inheritdoc cref="FalseText"/>
-        ///// </summary>
-        //public static readonly DependencyProperty FalseTextProperty =
-        //    DependencyProperty.Register("Text", typeof(string), typeof(BoolOutput), new PropertyMetadata(null));
+        // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...Text
+        /// <summary>
+        /// Backing property for <see cref="TrueText"/>: <inheritdoc cref="TrueText"/>
+        /// </summary>
+        public static readonly DependencyProperty TrueTextProperty =
+            DependencyProperty.Register("TrueText", typeof(string), typeof(BoolOutput), new PropertyMetadata(null));
 
-        //#endregion
+        #endregion
 
         static BoolOutput()
         {
