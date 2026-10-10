@@ -12,7 +12,7 @@
                                 <ColumnDefinition Width="19"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Path x:Name="arrow" Data="M 0,0 L 5,5 L 10,0" HorizontalAlignment="Center"  VerticalAlignment="Center"
+                            <Path x:Name="arrow" Data="{StaticResource ExpanderArrow}" HorizontalAlignment="Center"  VerticalAlignment="Center"
                                   Stroke="{DynamicResource BasegroundColourKey}" SnapsToDevicePixels="false" StrokeThickness="2">
                                 <Path.LayoutTransform>
                                     <RotateTransform x:Name="rt" Angle="0"/>
@@ -60,7 +60,7 @@
                                 <ColumnDefinition Width="19"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Path x:Name="arrow" Data="M 0,0 L 5,5 L 10,0" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
+                            <Path x:Name="arrow" Data="{StaticResource ExpanderArrow}" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
                                       Stroke="{DynamicResource BasegroundColourKey}" StrokeThickness="2">
                                 <Path.LayoutTransform>
                                     <RotateTransform x:Name="rt" Angle="180"/>
@@ -107,7 +107,7 @@
                                 <RowDefinition Height="19"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Path x:Name="arrow" Data="M 0,0 L 5,5 L 10,0" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
+                            <Path x:Name="arrow" Data="{StaticResource ExpanderArrow}" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
                                       Stroke="{DynamicResource BasegroundColourKey}" StrokeThickness="2">
                                 <Path.LayoutTransform>
                                     <RotateTransform x:Name="rt" Angle="90"/>
@@ -154,7 +154,7 @@
                                 <RowDefinition Height="19"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Path x:Name="arrow" Data="M 0,0 L 5,5 L 10,0" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
+                            <Path x:Name="arrow" Data="{StaticResource ExpanderArrow}" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false"
                                       Stroke="{DynamicResource BasegroundColourKey}" StrokeThickness="2">
                                 <Path.LayoutTransform>
                                     <RotateTransform x:Name="rt" Angle="270"/>
@@ -248,6 +248,7 @@
     <Style TargetType="GridSplitter">
         <Setter Property="Margin" Value="2" />
         <Setter Property="Background" Value="{DynamicResource PanelColourKey}" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ContrastFocusVisualStyle}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Trigger.Setters>
