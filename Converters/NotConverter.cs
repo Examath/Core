@@ -13,13 +13,19 @@ namespace Examath.Core.Converters
     /// </summary>
     public class NotConverter : IValueConverter
     {
+        /// <summary>
+        /// Inverts the boolean value
+        /// </summary>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is bool param) return !param;
             else return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		/// <summary>
+		/// Inverts the boolean value
+		/// </summary>
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is bool param) return !param;
             else return false;

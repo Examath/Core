@@ -21,7 +21,7 @@ namespace Examath.Core.Environment
         /// This must be oveidden to style and add the block.
         /// </summary>
         /// <remarks>
-        /// Use <see cref="Out(string, ConsoleStyle)"/> if formatting is not needed.
+        /// Use <see cref="Out(object, ConsoleStyle)"/> if formatting is not needed.
         /// </remarks>
         /// <param name="block">The paragraph to output</param>
         /// <param name="style">The style of message, similar to Out()</param>

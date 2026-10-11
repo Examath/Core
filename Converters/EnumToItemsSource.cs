@@ -15,7 +15,15 @@ namespace Examath.Core.Converters
 	/// </remarks>
 	public class EnumToItemsSource : MarkupExtension
 	{
-		private readonly Type _Type;
+		private readonly Type? _Type;
+
+		/// <summary>
+		/// Initializes an empty <see cref="EnumToItemsSource"/>
+		/// </summary>
+		public EnumToItemsSource()
+		{
+
+		}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="EnumToItemsSource"/> for the
@@ -44,8 +52,9 @@ namespace Examath.Core.Converters
 		/// each value of the configured enum type. Suitable for use as an
 		/// ItemsSource in XAML bindings.
 		/// </summary>
-		public override object ProvideValue(IServiceProvider serviceProvider)
+		public override object? ProvideValue(IServiceProvider serviceProvider)
 		{
+			if (_Type == null) return null;
 			return Enum.GetValues(_Type)
 				.Cast<object>()
 				.Select(e => new EnumValue(e, e.ToString() ?? "null"));
