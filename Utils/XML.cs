@@ -53,18 +53,18 @@ namespace Examath.Core.Utils
             }
         }
 
-        /// <summary>
-        /// Serialize an object of type <typeparamref name="T"/> to an XML file asynchronously
-        /// </summary>
-        /// <typeparam name="T">The type to serialize from</typeparam>
-        /// <param name="fileLocation">Location of xml file</param>
-        /// <param name="data">The object to serialize</param>
-        /// <param name="xmlWriterSettings">The settings to use. If this is null, then the default settings are used</param>
-        /// <remarks>
-        /// Use <see cref="Save{T}(string, T)"/> for synchronous saving.
-        /// This method does not catch any exceptions.
-        /// </remarks>
-        public static async Task SaveAsync<T> (string fileLocation, T data, XmlWriterSettings? xmlWriterSettings = null)
+		/// <summary>
+		/// Serialize an object of type <typeparamref name="T"/> to an XML file asynchronously
+		/// </summary>
+		/// <typeparam name="T">The type to serialize from</typeparam>
+		/// <param name="fileLocation">Location of xml file</param>
+		/// <param name="data">The object to serialize</param>
+		/// <param name="xmlWriterSettings">The settings to use. If this is null, then the default settings are used</param>
+		/// <remarks>
+		/// Use <see cref="Save{T}(string, T, XmlWriterSettings?)"/> for synchronous saving.
+		/// This method does not catch any exceptions.
+		/// </remarks>
+		public static async Task SaveAsync<T> (string fileLocation, T data, XmlWriterSettings? xmlWriterSettings = null)
         {
             await Task.Run(() => Save(fileLocation, data, xmlWriterSettings));
         }
@@ -77,7 +77,7 @@ namespace Examath.Core.Utils
         /// <param name="data">The object to serialize</param>
         /// <param name="xmlWriterSettings">The settings to use. If this is null, then the default settings are used</param>
         /// <remarks>
-        /// Use <see cref="SaveAsync{T}(string, T)"/> for asynchronous saving.
+        /// Use <see cref="SaveAsync{T}(string, T, XmlWriterSettings?)"/>  for asynchronous saving.
         /// This method does not catch any exceptions.
         /// </remarks>
         public static void Save<T>(string fileLocation, T data, XmlWriterSettings? xmlWriterSettings = null)
