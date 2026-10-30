@@ -33,7 +33,7 @@ namespace Examath.Core.Environment
     /// <summary>
     /// Represents the vale of a progress bar in the <see cref="ProgressWindow"/>
     /// </summary>
-    public class ProgressWindowTask : ObservableObject
+    public class ProgressWindowTask : ObservableObject, IProgress<double>
     {
         /// <summary>
         /// Gets the header of the progress bar
@@ -50,11 +50,11 @@ namespace Examath.Core.Environment
             set => SetProperty(ref _Maximum, value);
         }
 
-        private int _Value = 0;
+        private double _Value = 0;
         /// <summary>
         /// Gets or sets the current value of the progress bar
         /// </summary>
-        public int Value
+        public double Value
         {
             get => _Value;
             set => SetProperty(ref _Value, value);
@@ -65,7 +65,7 @@ namespace Examath.Core.Environment
         /// </summary>
         /// <param name="header"></param>
         /// <param name="maximum"></param>
-        public ProgressWindowTask(string header = "", double maximum = 1)
+        public ProgressWindowTask(string header = "", double maximum = 1.0)
         {
             Header = header;
             Maximum = maximum;
@@ -77,6 +77,22 @@ namespace Examath.Core.Environment
         public void Increment()
         {
             Value++;
+        }
+
+        /// <summary>
+        /// Reports a value, safely marshaling the property change to the WPF dispatcher.
+        /// </summary>
+        /// <param name="value">The new progress value.</param>
+        public void Report(double value)
+        {
+            System.Windows.Threading.Dispatcher? dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null || dispatcher.CheckAccess())
+            {
+                Value = value;
+                return;
+            }
+
+            dispatcher.BeginInvoke(new Action(() => Value = value));
         }
     }
 }
