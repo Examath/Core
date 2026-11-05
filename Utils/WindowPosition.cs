@@ -12,7 +12,7 @@ namespace Examath.Core.Utils
     /// </summary>
     public static class WindowPosition
     {
-        private const double _OFFSET = 24.0;
+        private const double OFFSET = 24.0;
 
         // From https://stackoverflow.com/a/19780697/10701111
         /// <summary>
@@ -28,8 +28,8 @@ namespace Examath.Core.Utils
             // Transform point
             var transform = PresentationSource.FromVisual(window).CompositionTarget.TransformFromDevice;
             var transformedMousePoint = transform.Transform(mousePoint);
-            window.Left = transformedMousePoint.X - _OFFSET;
-            window.Top = transformedMousePoint.Y - _OFFSET;
+            window.Left = transformedMousePoint.X - OFFSET;
+            window.Top = transformedMousePoint.Y - OFFSET;
         }
     }
 }

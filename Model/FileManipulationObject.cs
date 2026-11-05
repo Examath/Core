@@ -16,7 +16,7 @@ namespace Examath.Core.Model
     /// </summary>
     /// <remarks>
     /// <para>
-    ///     Exposes a <see cref="FileLocation"/> property and <see cref="Open"/>, <see cref="Save"/> and <see cref="SaveAs"/> commands.
+    ///     Exposes a <see cref="FileLocation"/> property and <see cref="Open()"/>, <see cref="Save"/> and <see cref="SaveAs"/> commands.
     ///     The <see cref="SaveFileAsync"/>, <see cref="LoadFile"/> and <see cref="LoadFileAsync"/> methods must be implemented by derivied type.
     /// </para>
     /// </remarks>
@@ -107,7 +107,7 @@ namespace Examath.Core.Model
 		/// </summary>
 		/// <remarks>
 		/// Call for autoloading at application startup
-		/// No dialogs are created to inform the user if this works or fails, use <see cref="Open"/> if some user control is required.
+		/// No dialogs are created to inform the user if this works or fails, use <see cref="Open()"/> if some user control is required.
 		/// </remarks>
 		/// <returns>
 		/// True if file exists and is isLoaded without error, and false otherwise.
@@ -207,7 +207,7 @@ namespace Examath.Core.Model
 		/// or a new file is made, setting 
 		/// </summary>
 		/// <remarks>
-		/// Use <see cref="TryLoad"/>, <see cref="Open"/> where possible for friendlier user experience.
+		/// Use <see cref="TryLoad"/>, <see cref="Open()"/> where possible for friendlier user experience.
 		/// </remarks>
 		public async Task CreateOrOpen()
         {
@@ -391,7 +391,7 @@ namespace Examath.Core.Model
         }
 
         /// <summary>
-        /// Shows a <see cref="MessageBox"/> to tell if user intends to save, discard or cancel
+        /// Shows a <see cref="Messager"/> to tell if user intends to save, discard or cancel
         /// any unsaved changes. Override for custom prompting behaviour.
         /// </summary>
         /// <returns>The result of the <see cref="MessageBoxButton.YesNoCancel"/></returns>

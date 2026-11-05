@@ -52,10 +52,11 @@ namespace Examath.Core.Environment
         /// Outputs a Paragraph to this section. For custom-formatted messages
         /// </summary>
         /// <remarks>
-        /// Use <see cref="OutputBase.Out(string, ConsoleStyle)"/> if formatting is not needed.
+        /// Use <see cref="OutputBase.Out(object, ConsoleStyle)"/> if formatting is not needed.
         /// </remarks>
         /// <param name="block">The paragraph to output</param>
         /// <param name="type">The type of message, similar to Out()</param>
+        /// <param name="tooltip">The tooltip to be attached to this block</param>
         public override void OutBlock(Block block, ConsoleStyle type = ConsoleStyle.Unset, string tooltip = "")
         {
             // Standard Tooltip
